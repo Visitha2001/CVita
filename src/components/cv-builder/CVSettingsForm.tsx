@@ -79,11 +79,11 @@ function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
 function Section({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
     <section className="rounded-2xl border bg-card shadow-sm overflow-hidden">
-      <div className="bg-gradient-to-r from-primary/10 to-transparent px-5 py-4 border-b">
+      <div className="bg-gradient-to-r from-primary/10 to-transparent px-4 sm:px-5 py-3 sm:py-4 border-b">
         <h3 className="font-bold text-base">{title}</h3>
         {desc && <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>}
       </div>
-      <div className="px-5 py-5">{children}</div>
+      <div className="px-4 sm:px-5 py-4 sm:py-5">{children}</div>
     </section>
   );
 }
@@ -143,7 +143,7 @@ export default function CVSettingsForm() {
 
       {/* Profile Picture Shape */}
       <Section title="Profile Picture Shape">
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 sm:grid-cols-3 gap-3 sm:gap-4">
           {shapes.map(({ id, label, Icon }) => (
             <Card
               key={id}
@@ -161,7 +161,7 @@ export default function CVSettingsForm() {
 
       {/* CV Spacing */}
       <Section title="CV Spacing" desc="Controls internal padding for the selected template">
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 sm:grid-cols-3 gap-3 sm:gap-4">
           {([
             { id: "compact",  label: "Compact",  desc: "Dense",    pad: "p-1" },
             { id: "standard", label: "Standard", desc: "Balanced", pad: "p-2" },

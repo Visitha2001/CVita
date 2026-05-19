@@ -68,23 +68,23 @@ export default function Navbar() {
   const currentLang = LANG_OPTIONS.find((l) => l.id === lang);
 
   return (
-    <nav className="flex items-center justify-between px-6 py-4 border-b bg-background/80 backdrop-blur-md sticky top-0 z-50">
+    <nav className="flex items-center justify-between px-3 sm:px-6 py-3 sm:py-4 border-b bg-background/80 backdrop-blur-md sticky top-0 z-50">
       {/* Logo */}
-      <div className="flex items-center space-x-3">
-        <div className="bg-primary/10 p-2 rounded-xl text-primary">
-          <FileText className="w-5 h-5" />
+      <div className="flex items-center space-x-2 sm:space-x-3">
+        <div className="bg-primary/10 p-1.5 sm:p-2 rounded-xl text-primary">
+          <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
         </div>
-        <h1 className="text-xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
+        <h1 className="text-lg sm:text-xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
           VitaForge
         </h1>
       </div>
 
       {/* Actions */}
-      <div className="flex items-center space-x-2.5">
+      <div className="flex items-center space-x-1.5 sm:space-x-2.5">
 
         {/* Language switcher */}
         <DropdownMenu>
-          <DropdownMenuTrigger className="inline-flex items-center justify-center gap-2 rounded-full h-9 px-3 border border-border bg-muted/50 hover:bg-muted text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+          <DropdownMenuTrigger className="inline-flex items-center justify-center gap-1.5 rounded-full h-8 sm:h-9 px-2.5 sm:px-3 border border-border bg-muted/50 hover:bg-muted text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
             <Globe className="w-3.5 h-3.5 shrink-0" />
             <span className="hidden sm:inline">{currentLang?.native}</span>
           </DropdownMenuTrigger>
@@ -103,13 +103,13 @@ export default function Navbar() {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <div className="h-5 w-px bg-border mx-0.5" />
+        <div className="h-5 w-px bg-border" />
 
-        {/* Export */}
+        {/* Export — icon-only on mobile, full label on sm+ */}
         <DropdownMenu>
-          <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-5 shadow-lg shadow-primary/20">
-            <Download className="mr-2 h-4 w-4" />
-            {t.exportCV}
+          <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-8 w-8 sm:h-10 sm:w-auto sm:px-5 shadow-lg shadow-primary/20">
+            <Download className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">{t.exportCV}</span>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-52">
             <DropdownMenuItem onClick={downloadPDF} className="cursor-pointer">
@@ -131,11 +131,11 @@ export default function Navbar() {
         <Button
           variant="outline"
           size="icon"
-          className="rounded-full w-10 h-10 border-muted bg-muted/50 hover:bg-muted"
+          className="rounded-full w-8 h-8 sm:w-10 sm:h-10 border-muted bg-muted/50 hover:bg-muted shrink-0"
           onClick={() => setTheme(theme === "light" ? "dark" : "light")}
         >
-          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <Sun className="h-[1.1rem] w-[1.1rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute h-[1.1rem] w-[1.1rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="sr-only">Toggle theme</span>
         </Button>
       </div>

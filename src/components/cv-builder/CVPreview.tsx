@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { useCVStore } from "@/store/useCVStore";
 import { type TemplateProps } from "../cv-templates/shared";
 import SETemplate from "../cv-templates/SETemplate";
@@ -8,8 +9,9 @@ import FSTemplate from "../cv-templates/FSTemplate";
 import GenTemplate from "../cv-templates/GenTemplate";
 import FinTemplate from "../cv-templates/FinTemplate";
 
-const A4_WIDTH_MM = 210;  // used for id="cv-preview-container" width
-const A4_HEIGHT_MM = 297; // used for minHeight
+// A4 at 96 dpi
+const A4_W_PX = 794;
+const A4_H_PX = 1123;
 
 function TemplateRouter(props: TemplateProps) {
   const category = props.settings.activeTemplate.split("-")[0];
@@ -24,22 +26,54 @@ function TemplateRouter(props: TemplateProps) {
 
 export default function CVPreview() {
   const { cvData, settings } = useCVStore();
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
   const fontUrl = `https://fonts.googleapis.com/css2?family=${settings.fontFamily.replace(/ /g, "+")}:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap`;
 
+  // Scale the A4 to fit the available container width
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => {
+      const containerW = el.clientWidth;
+      if (containerW > 0) {
+        setScale(Math.min(1, containerW / A4_W_PX));
+      }
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   return (
-    <div className="flex-1 w-full flex justify-center py-8">
+    <div ref={wrapRef} className="w-full flex justify-center py-4 md:py-8">
       <style>{`@import url('${fontUrl}');`}</style>
+      {/* Outer shell maintains correct height for the scaled A4 */}
       <div
-        id="cv-preview-container"
-        className="shadow-2xl flex-shrink-0 bg-white overflow-hidden"
         style={{
-          width: `${A4_WIDTH_MM}mm`,
-          minHeight: `${A4_HEIGHT_MM}mm`,
-          fontFamily: settings.fontFamily,
-          color: settings.fontColor,
+          width: `${A4_W_PX * scale}px`,
+          height: `${A4_H_PX * scale}px`,
+          position: "relative",
+          flexShrink: 0,
         }}
       >
-        <TemplateRouter data={cvData} settings={settings} />
+        {/* Inner A4 rendered at full size, then scaled */}
+        <div
+          id="cv-preview-container"
+          className="shadow-2xl bg-white overflow-hidden"
+          style={{
+            width: `${A4_W_PX}px`,
+            height: `${A4_H_PX}px`,
+            transform: `scale(${scale})`,
+            transformOrigin: "top left",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            fontFamily: settings.fontFamily,
+            color: settings.fontColor,
+          }}
+        >
+          <TemplateRouter data={cvData} settings={settings} />
+        </div>
       </div>
     </div>
   );
