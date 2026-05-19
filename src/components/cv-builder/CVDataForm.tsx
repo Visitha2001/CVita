@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+
 import {
   Accordion,
   AccordionContent,
@@ -107,64 +108,193 @@ function SectionHeader({
 
 function ImageField() {
   const { cvData, setCVData } = useCVStore();
-  const [draft, setDraft] = useState(cvData.image ?? "");
-  const [applied, setApplied] = useState(false);
+  const [urlDraft, setUrlDraft] = useState(cvData.image ?? "");
+  const [mode, setMode] = useState<"upload" | "url">("upload");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [dragging, setDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const apply = () => {
-    setCVData({ image: draft });
-    setApplied(true);
-    setTimeout(() => setApplied(false), 2000);
-  };
+  const preview = cvData.image;
+
+  /** Convert any File to a base64 data-URL and save it */
+  function handleFile(file: File) {
+    if (!file.type.startsWith("image/")) {
+      setError("Please select an image file.");
+      return;
+    }
+    setError("");
+    setLoading(true);
+    const reader = new FileReader();
+    reader.onload = () => {
+      setCVData({ image: reader.result as string });
+      setLoading(false);
+    };
+    reader.onerror = () => { setError("Failed to read file."); setLoading(false); };
+    reader.readAsDataURL(file);
+  }
+
+  /** Fetch an external URL via the server to bypass CORS and convert it to base64 */
+  async function applyUrl() {
+    const url = urlDraft.trim();
+    if (!url) return;
+    setLoading(true);
+    setError("");
+    try {
+      const resp = await fetch(`/api/fetch-image?url=${encodeURIComponent(url)}`);
+      if (!resp.ok) {
+        const errData = await resp.json().catch(() => ({}));
+        throw new Error(errData.error || "Failed to load image");
+      }
+      const data = await resp.json();
+      setCVData({ image: data.dataUrl });
+      setLoading(false);
+    } catch (err: any) {
+      // Fallback: Just save the URL directly if our proxy fails
+      setCVData({ image: url });
+      setLoading(false);
+      setError(`Warning: The image could not be proxy-fetched (${err.message}). It may not appear in exported PDFs.`);
+    }
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  }
+
+  function clearImage() {
+    setCVData({ image: "" });
+    setUrlDraft("");
+    setError("");
+  }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 sm:col-span-2">
       <Label className="flex items-center gap-2">
         <ImageIcon className="w-4 h-4 text-primary" />
-        Profile Picture URL
+        Profile Picture
       </Label>
 
-      {/* preview */}
-      {draft && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={draft}
-          alt="Profile preview"
-          className="w-20 h-20 rounded-full object-cover border-2 border-primary/30 shadow"
-          onError={(e) => (e.currentTarget.style.display = "none")}
-        />
+      {/* ── Mode tabs ── */}
+      <div className="flex rounded-lg border overflow-hidden text-xs font-semibold">
+        <button
+          onClick={() => setMode("upload")}
+          className={`flex-1 py-1.5 transition-colors ${mode === "upload" ? "bg-primary text-primary-foreground" : "hover:bg-muted text-muted-foreground"}`}
+        >
+          Upload File
+        </button>
+        <button
+          onClick={() => setMode("url")}
+          className={`flex-1 py-1.5 transition-colors border-l ${mode === "url" ? "bg-primary text-primary-foreground" : "hover:bg-muted text-muted-foreground"}`}
+        >
+          Paste URL
+        </button>
+      </div>
+
+      {mode === "upload" ? (
+        /* ── Drag & drop zone ── */
+        <div
+          onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={handleDrop}
+          onClick={() => fileInputRef.current?.click()}
+          className={`relative flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed cursor-pointer transition-all py-5 px-4 text-center ${
+            dragging
+              ? "border-primary bg-primary/10 scale-[1.01]"
+              : "border-border hover:border-primary/50 hover:bg-muted/40"
+          }`}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
+          />
+          {loading ? (
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              <span className="text-xs text-muted-foreground">Processing…</span>
+            </div>
+          ) : (
+            <>
+              <div className="p-2.5 rounded-full bg-primary/10">
+                <ImageIcon className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-medium">Drop image here or <span className="text-primary underline underline-offset-2">browse</span></p>
+                <p className="text-xs text-muted-foreground mt-0.5">JPG, PNG, WebP, GIF · any source</p>
+              </div>
+            </>
+          )}
+        </div>
+      ) : (
+        /* ── URL input ── */
+        <div className="space-y-2">
+          <div className="flex gap-2">
+            <Input
+              value={urlDraft}
+              onChange={(e) => { setUrlDraft(e.target.value); setError(""); }}
+              placeholder="https://lh3.googleusercontent.com/…"
+              className="flex-1 text-xs"
+              onKeyDown={(e) => e.key === "Enter" && applyUrl()}
+            />
+            <Button
+              size="sm"
+              onClick={applyUrl}
+              disabled={loading || !urlDraft.trim()}
+              className="shrink-0"
+            >
+              {loading ? (
+                <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+              ) : (
+                "Apply"
+              )}
+            </Button>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Works with Google, GitHub, LinkedIn, social media, or any direct image link.
+          </p>
+        </div>
       )}
 
-      <div className="flex gap-2">
-        <Input
-          value={draft}
-          onChange={(e) => {
-            setDraft(e.target.value);
-            setApplied(false);
-          }}
-          placeholder="https://example.com/photo.jpg"
-          className="flex-1"
-        />
-        <Button
-          size="sm"
-          variant={applied ? "secondary" : "default"}
-          onClick={apply}
-          className="shrink-0 gap-1.5"
-        >
-          {applied ? (
-            <>
-              <CheckCircle2 className="w-4 h-4" /> Applied
-            </>
-          ) : (
-            "Apply"
-          )}
-        </Button>
-      </div>
-      <p className="text-xs text-muted-foreground">
-        Paste a public image URL and click Apply to show in the preview.
-      </p>
+      {error && (
+        <p className="text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 rounded-lg px-3 py-2 leading-relaxed">
+          {error}
+        </p>
+      )}
+
+      {/* ── Preview ── */}
+      {preview && (
+        <div className="flex items-center gap-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={preview}
+            alt="Profile preview"
+            className="w-16 h-16 rounded-full object-cover border-2 border-primary/30 shadow-md shrink-0"
+            onError={(e) => (e.currentTarget.style.display = "none")}
+          />
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-medium text-foreground truncate">Image applied ✓</p>
+            <p className="text-xs text-muted-foreground truncate">
+              {preview.startsWith("data:") ? "Local file (base64)" : preview}
+            </p>
+          </div>
+          <button
+            onClick={clearImage}
+            className="p-1.5 rounded-full hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors shrink-0"
+            title="Remove image"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
+
 
 // ── Tag chip input ────────────────────────────────────────────────────────────
 
@@ -448,10 +578,11 @@ export default function CVDataForm() {
                     <Textarea value={exp.description} onChange={(e) => updateItem("experience", exp.id, { description: e.target.value })} className="resize-none h-24" />
                   </div>
                   <div className="space-y-1 sm:col-span-2">
-                    <Label>{t.skills} <span className="text-muted-foreground text-xs">(comma separated)</span></Label>
-                    <Input
-                      value={exp.skills?.join(", ")}
-                      onChange={(e) => updateItem("experience", exp.id, { skills: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })}
+                    <Label>{t.skills}</Label>
+                    <TagInput
+                      tags={exp.skills ?? []}
+                      onChange={(skills) => updateItem("experience", exp.id, { skills })}
+                      placeholder="Add skill, press Enter…"
                     />
                   </div>
                 </div>
@@ -553,10 +684,11 @@ export default function CVDataForm() {
                     <Textarea value={proj.description} onChange={(e) => updateItem("projects", proj.id, { description: e.target.value })} className="resize-none h-24" />
                   </div>
                   <div className="space-y-1">
-                    <Label>Skills <span className="text-muted-foreground text-xs">(comma separated)</span></Label>
-                    <Input
-                      value={proj.skills?.join(", ")}
-                      onChange={(e) => updateItem("projects", proj.id, { skills: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })}
+                    <Label>Skills</Label>
+                    <TagInput
+                      tags={proj.skills ?? []}
+                      onChange={(skills) => updateItem("projects", proj.id, { skills })}
+                      placeholder="Add skill, press Enter…"
                     />
                   </div>
                 </div>
@@ -581,20 +713,12 @@ export default function CVDataForm() {
           <AccordionContent className="px-5 pb-5 space-y-4">
             {/* Flat skills */}
             <div className="space-y-2">
-              <Label>{t.allSkills} <span className="text-muted-foreground text-xs">(comma separated)</span></Label>
-              <Textarea
-                value={cvData.skills.join(", ")}
-                onChange={(e) => setCVData({ skills: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })}
-                placeholder="JavaScript, React, Node.js…"
-                className="resize-none h-20"
+              <Label>{t.allSkills}</Label>
+              <TagInput
+                tags={cvData.skills.filter(Boolean)}
+                onChange={(skills) => setCVData({ skills })}
+                placeholder="Add skill, press Enter…"
               />
-              {cvData.skills.filter(Boolean).length > 0 && (
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {cvData.skills.filter(Boolean).map((s) => (
-                    <Badge key={s} variant="secondary" className="text-xs">{s}</Badge>
-                  ))}
-                </div>
-              )}
             </div>
             {/* Skill sub-categories (optional) */}
             <SkillCategoriesEditor />
@@ -645,19 +769,12 @@ export default function CVDataForm() {
             <SectionHeader icon={Languages} label={t.languages} count={cvData.languages.filter(Boolean).length} />
           </AccordionTrigger>
           <AccordionContent className="px-5 pb-5 space-y-2">
-            <Label>Languages <span className="text-muted-foreground text-xs">(comma separated, e.g. English (Native))</span></Label>
-            <Input
-              value={cvData.languages.join(", ")}
-              onChange={(e) => setCVData({ languages: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })}
-              placeholder="English (Native), Tamil (Fluent)…"
+            <Label>Languages</Label>
+            <TagInput
+              tags={cvData.languages.filter(Boolean)}
+              onChange={(languages) => setCVData({ languages })}
+              placeholder="e.g. English (Native), press Enter…"
             />
-            {cvData.languages.filter(Boolean).length > 0 && (
-              <div className="flex flex-wrap gap-1.5 pt-1">
-                {cvData.languages.filter(Boolean).map((l, i) => (
-                  <Badge key={i} variant="secondary" className="text-xs">{l}</Badge>
-                ))}
-              </div>
-            )}
           </AccordionContent>
         </AccordionItem>
 
