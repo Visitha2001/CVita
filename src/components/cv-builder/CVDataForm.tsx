@@ -353,15 +353,15 @@ export default function CVDataForm() {
 
       {/* ── Personal Details ── */}
       <section className="rounded-2xl border bg-card shadow-sm overflow-hidden">
-        <div className="bg-gradient-to-r from-primary/10 to-transparent px-5 py-4 border-b flex items-center gap-2">
+        <div className="bg-gradient-to-r from-primary/10 to-transparent px-4 sm:px-5 py-3 sm:py-4 border-b flex items-center gap-2">
           <User className="w-5 h-5 text-primary" />
           <h2 className="text-lg font-bold tracking-tight">{t.personalDetails}</h2>
         </div>
-        <div className="px-5 py-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="px-4 sm:px-5 py-4 sm:py-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <ImageField />
 
           {/* name row */}
-          <div className="space-y-1.5 md:col-span-2">
+          <div className="space-y-1.5 sm:col-span-2">
             <Label htmlFor="name">{t.fullName}</Label>
             <Input id="name" name="name" value={cvData.name} onChange={handleField} placeholder="Jane Doe" />
           </div>
@@ -386,11 +386,11 @@ export default function CVDataForm() {
 
       {/* ── Professional Summary ── */}
       <section className="rounded-2xl border bg-card shadow-sm overflow-hidden">
-        <div className="bg-gradient-to-r from-primary/10 to-transparent px-5 py-4 border-b flex items-center gap-2">
+        <div className="bg-gradient-to-r from-primary/10 to-transparent px-4 sm:px-5 py-3 sm:py-4 border-b flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-primary" />
           <h2 className="text-lg font-bold tracking-tight">{t.professionalSummary}</h2>
         </div>
-        <div className="px-5 py-5">
+        <div className="px-4 sm:px-5 py-4 sm:py-5">
           <Textarea
             id="professionalSummary"
             name="professionalSummary"
@@ -426,7 +426,7 @@ export default function CVDataForm() {
                     <button onClick={() => useCVStore.getState().removeArrayItem("experience", exp.id)} className="p-1 rounded hover:bg-destructive/10 text-destructive transition"><Trash2 className="w-4 h-4" /></button>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1">
                     <Label>{t.company}</Label>
                     <Input value={exp.company} onChange={(e) => updateItem("experience", exp.id, { company: e.target.value })} />
@@ -443,11 +443,11 @@ export default function CVDataForm() {
                     <Label>{t.endDate}</Label>
                     <Input value={exp.endDate} onChange={(e) => updateItem("experience", exp.id, { endDate: e.target.value })} placeholder={t.present} />
                   </div>
-                  <div className="space-y-1 md:col-span-2">
+                  <div className="space-y-1 sm:col-span-2">
                     <Label>{t.description}</Label>
                     <Textarea value={exp.description} onChange={(e) => updateItem("experience", exp.id, { description: e.target.value })} className="resize-none h-24" />
                   </div>
-                  <div className="space-y-1 md:col-span-2">
+                  <div className="space-y-1 sm:col-span-2">
                     <Label>{t.skills} <span className="text-muted-foreground text-xs">(comma separated)</span></Label>
                     <Input
                       value={exp.skills?.join(", ")}
@@ -489,7 +489,7 @@ export default function CVDataForm() {
                     <button onClick={() => useCVStore.getState().removeArrayItem("education", edu.id)} className="p-1 rounded hover:bg-destructive/10 text-destructive transition"><Trash2 className="w-4 h-4" /></button>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1">
                     <Label>{t.institution}</Label>
                     <Input value={edu.institution} onChange={(e) => updateItem("education", edu.id, { institution: e.target.value })} />
@@ -617,8 +617,8 @@ export default function CVDataForm() {
                     <button onClick={() => useCVStore.getState().removeArrayItem("certifications", cert.id)} className="p-1 rounded hover:bg-destructive/10 text-destructive transition"><Trash2 className="w-4 h-4" /></button>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div className="space-y-1 md:col-span-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1 sm:col-span-2">
                     <Label>Certification Name</Label>
                     <Input value={cert.name} onChange={(e) => useCVStore.getState().updateArrayItem("certifications", cert.id, { name: e.target.value })} />
                   </div>
@@ -680,7 +680,7 @@ export default function CVDataForm() {
                     <button onClick={() => useCVStore.getState().removeArrayItem("references", ref.id)} className="p-1 rounded hover:bg-destructive/10 text-destructive transition"><Trash2 className="w-4 h-4" /></button>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1">
                     <Label>Name</Label>
                     <Input value={ref.name} onChange={(e) => useCVStore.getState().updateArrayItem("references", ref.id, { name: e.target.value })} />
@@ -697,7 +697,7 @@ export default function CVDataForm() {
                     <Label>Email</Label>
                     <Input type="email" value={ref.email} onChange={(e) => useCVStore.getState().updateArrayItem("references", ref.id, { email: e.target.value })} />
                   </div>
-                  <div className="space-y-1 md:col-span-2">
+                  <div className="space-y-1 sm:col-span-2">
                     <Label>Phone <span className="text-muted-foreground text-xs">(optional)</span></Label>
                     <Input value={ref.phone} onChange={(e) => useCVStore.getState().updateArrayItem("references", ref.id, { phone: e.target.value })} />
                   </div>
