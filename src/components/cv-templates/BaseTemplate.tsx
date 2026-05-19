@@ -1,7 +1,8 @@
 "use client";
 
 import { CVData, CVSettings } from "@/store/useCVStore";
-import { Mail, MapPin, Phone, Globe, Link as LinkIcon, Briefcase, GraduationCap, Code, Award, User } from "lucide-react";
+import { Mail, MapPin, Phone, Globe, Briefcase, GraduationCap, Code, Award, User } from "lucide-react";
+import { getSocialIcon } from "./shared";
 
 interface Props {
   data: CVData;
@@ -22,8 +23,10 @@ export default function BaseTemplate({ data, settings }: Props) {
   // Helpers
   const isImageVariant = varIndex % 2 !== 0; // Odd variations have images
   
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const renderIcon = (_platform: string) => <LinkIcon className="w-4 h-4" />;
+  const renderIcon = (platform: string) => {
+    const Icon = getSocialIcon(platform);
+    return <Icon className="w-4 h-4 opacity-70" />;
+  };
   
   const ImageBox = ({ className = "" }: { className?: string }) => (
     isImageVariant && data.image ? (

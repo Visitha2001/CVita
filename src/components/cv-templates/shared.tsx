@@ -57,11 +57,25 @@ export function ContactRow({
       {data.phone && <span className={itemClass}><Phone className="w-3 h-3" /> {data.phone}</span>}
       {data.address && <span className={itemClass}><MapPin className="w-3 h-3" /> {data.address}</span>}
       {data.website && <span className={itemClass}><Globe className="w-3 h-3" /> {data.website}</span>}
-      {data.socialMedia?.map((s, i) => (
-        <span key={i} className={itemClass}><LinkIcon className="w-3 h-3" /> {s.url.replace(/^https?:\/\//, "")}</span>
-      ))}
+      {data.socialMedia?.map((s, i) => {
+        const Icon = getSocialIcon(s.platform);
+        return (
+          <span key={i} className={itemClass}><Icon className="w-3 h-3" /> {s.url.replace(/^https?:\/\//, "")}</span>
+        );
+      })}
     </div>
   );
+}
+
+export function getSocialIcon(platform: string) {
+  const p = platform.toLowerCase();
+  if (p.includes("github") || p.includes("linkedin") || p.includes("facebook") || p.includes("twitter")) {
+    return LinkIcon;
+  }
+  if (p.includes("portfolio") || p.includes("medium")) {
+    return Globe;
+  }
+  return LinkIcon;
 }
 
 export function SkillChips({

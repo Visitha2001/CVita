@@ -25,13 +25,15 @@ import {
   Code,
   Sparkles,
   ImageIcon,
-  CheckCircle2,
+
   Eraser,
   FolderOpen,
   Users,
   Award,
   Languages,
   X,
+  Link as LinkIcon,
+  ClipboardPaste,
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 
@@ -39,46 +41,7 @@ import { useI18n } from "@/lib/i18n";
 
 type ArrayKey = "experience" | "education" | "projects";
 
-function ItemControls({
-  id,
-  arrayKey,
-  isFirst,
-  isLast,
-}: {
-  id: string;
-  arrayKey: ArrayKey;
-  isFirst: boolean;
-  isLast: boolean;
-}) {
-  const { moveArrayItem, removeArrayItem } = useCVStore();
-  return (
-    <div className="flex items-center gap-1">
-      <button
-        disabled={isFirst}
-        onClick={() => moveArrayItem(arrayKey, id, "up")}
-        className="p-1 rounded hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed transition"
-        title="Move up"
-      >
-        <ChevronUp className="w-4 h-4" />
-      </button>
-      <button
-        disabled={isLast}
-        onClick={() => moveArrayItem(arrayKey, id, "down")}
-        className="p-1 rounded hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed transition"
-        title="Move down"
-      >
-        <ChevronDown className="w-4 h-4" />
-      </button>
-      <button
-        onClick={() => removeArrayItem(arrayKey, id)}
-        className="p-1 rounded hover:bg-destructive/10 text-destructive transition"
-        title="Remove"
-      >
-        <Trash2 className="w-4 h-4" />
-      </button>
-    </div>
-  );
-}
+
 
 // ── section header ────────────────────────────────────────────────────────────
 
@@ -149,11 +112,12 @@ function ImageField() {
       const data = await resp.json();
       setCVData({ image: data.dataUrl });
       setLoading(false);
-    } catch (err: any) {
+    } catch (err) {
       // Fallback: Just save the URL directly if our proxy fails
       setCVData({ image: url });
       setLoading(false);
-      setError(`Warning: The image could not be proxy-fetched (${err.message}). It may not appear in exported PDFs.`);
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(`Warning: The image could not be proxy-fetched (${msg}). It may not appear in exported PDFs.`);
     }
   }
 
@@ -534,6 +498,111 @@ export default function CVDataForm() {
 
       {/* ── Dynamic Sections ── */}
       <Accordion className="w-full space-y-3">
+
+        {/* Social Links */}
+        <AccordionItem value="social" className="rounded-2xl border bg-card shadow-sm overflow-hidden px-0">
+          <AccordionTrigger className="px-5 py-4 hover:no-underline">
+            <div className="flex items-center gap-2">
+              <LinkIcon className="w-4 h-4 text-primary" />
+              <h2 className="text-sm font-semibold">Social Links ({cvData.socialMedia?.length || 0})</h2>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-5 pb-5 space-y-4">
+            {cvData.socialMedia?.map((social, idx) => (
+              <div key={idx} className="rounded-xl border bg-muted/30 p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold text-muted-foreground">{social.platform || "New Link"}</span>
+                  <div className="flex items-center gap-1">
+                    <button disabled={idx === 0} onClick={() => {
+                        const newLinks = [...cvData.socialMedia];
+                        const temp = newLinks[idx];
+                        newLinks[idx] = newLinks[idx - 1];
+                        newLinks[idx - 1] = temp;
+                        setCVData({ socialMedia: newLinks });
+                    }} className="p-1 rounded hover:bg-muted disabled:opacity-30 transition"><ChevronUp className="w-4 h-4" /></button>
+                    <button disabled={idx === cvData.socialMedia.length - 1} onClick={() => {
+                        const newLinks = [...cvData.socialMedia];
+                        const temp = newLinks[idx];
+                        newLinks[idx] = newLinks[idx + 1];
+                        newLinks[idx + 1] = temp;
+                        setCVData({ socialMedia: newLinks });
+                    }} className="p-1 rounded hover:bg-muted disabled:opacity-30 transition"><ChevronDown className="w-4 h-4" /></button>
+                    <button onClick={() => setCVData({ socialMedia: cvData.socialMedia.filter((_, i) => i !== idx) })} className="p-1 rounded hover:bg-destructive/10 text-destructive transition"><Trash2 className="w-4 h-4" /></button>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <Label>Platform</Label>
+                    <select
+                      className="flex h-9 w-full rounded-md border border-input bg-background text-foreground px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                      value={social.platform}
+                      onChange={(e) => {
+                        const newLinks = [...cvData.socialMedia];
+                        newLinks[idx].platform = e.target.value;
+                        setCVData({ socialMedia: newLinks });
+                      }}
+                    >
+                      <option value="" className="bg-background text-foreground">Select Platform</option>
+                      <option value="GitHub" className="bg-background text-foreground">GitHub</option>
+                      <option value="LinkedIn" className="bg-background text-foreground">LinkedIn</option>
+                      <option value="Medium" className="bg-background text-foreground">Medium</option>
+                      <option value="Facebook" className="bg-background text-foreground">Facebook</option>
+                      <option value="Twitter" className="bg-background text-foreground">Twitter / X</option>
+                      <option value="Portfolio" className="bg-background text-foreground">Portfolio</option>
+                      <option value="Other" className="bg-background text-foreground">Other</option>
+                    </select>
+                  </div>
+                  <div className="space-y-1">
+                    <Label>Link URL</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        value={social.url}
+                        onChange={(e) => {
+                          const newLinks = [...cvData.socialMedia];
+                          newLinks[idx].url = e.target.value;
+                          setCVData({ socialMedia: newLinks });
+                        }}
+                        placeholder="https://..."
+                      />
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        size="icon"
+                        className="shrink-0 h-9 w-9"
+                        title="Paste from clipboard"
+                        onClick={async () => {
+                          try {
+                            const text = await navigator.clipboard.readText();
+                            if (text) {
+                              const newLinks = [...cvData.socialMedia];
+                              newLinks[idx].url = text;
+                              setCVData({ socialMedia: newLinks });
+                            }
+                          } catch (err) {
+                            console.error("Failed to read clipboard", err);
+                          }
+                        }}
+                      >
+                        <ClipboardPaste className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2"
+              onClick={() => {
+                const newLinks = [...(cvData.socialMedia || []), { platform: "GitHub", url: "" }];
+                setCVData({ socialMedia: newLinks });
+              }}
+            >
+              <Plus className="w-4 h-4" /> Add Social Link
+            </Button>
+          </AccordionContent>
+        </AccordionItem>
 
         {/* Experience */}
         <AccordionItem value="experience" className="rounded-2xl border bg-card shadow-sm overflow-hidden px-0">

@@ -29,7 +29,6 @@ const TEMPLATES = [
   { id: "se-2",  label: "Classic + Photo",  cat: "se"  },
   { id: "se-3",  label: "Two-Column",       cat: "se"  },
   { id: "se-4",  label: "Two-Col + Photo",  cat: "se"  },
-  { id: "se-5",  label: "Dark Header",      cat: "se"  },
   { id: "ml-1",  label: "Academic",         cat: "ml"  },
   { id: "ml-2",  label: "Academic + Photo", cat: "ml"  },
   { id: "ml-3",  label: "Formal",           cat: "ml"  },
@@ -49,7 +48,6 @@ const TEMPLATES = [
   { id: "gen-2", label: "Elegant + Photo",  cat: "gen" },
   { id: "gen-3", label: "Split",            cat: "gen" },
   { id: "gen-4", label: "Split + Photo",    cat: "gen" },
-  { id: "gen-5", label: "Creative",         cat: "gen" },
 ] as const;
 
 const CAT_LABELS: Record<string, string> = {
