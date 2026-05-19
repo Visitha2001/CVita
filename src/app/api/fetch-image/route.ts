@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
     const dataUrl = `data:${contentType};base64,${base64}`;
 
     return NextResponse.json({ dataUrl });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to fetch image due to a network error or invalid URL." },
       { status: 500 }
