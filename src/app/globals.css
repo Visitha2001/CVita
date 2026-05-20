@@ -128,3 +128,42 @@
     @apply font-sans;
   }
 }
+
+/* ── Minimal modern scrollbars ──────────────────────────────────────────────
+   Chrome / Safari / Edge (Chromium): thin, barely-there thumb
+   Firefox: thin scrollbar with matching colours                           */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+*:hover {
+  scrollbar-color: oklch(0 0 0 / 18%) transparent;
+}
+.dark *:hover {
+  scrollbar-color: oklch(1 0 0 / 18%) transparent;
+}
+
+/* Webkit */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 9999px;
+  transition: background 0.2s ease;
+}
+/* Show thumb only when the parent is hovered */
+*:hover > ::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0 0 0 / 18%);
+}
+.dark *:hover > ::-webkit-scrollbar-thumb,
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: oklch(1 0 0 / 18%);
+}

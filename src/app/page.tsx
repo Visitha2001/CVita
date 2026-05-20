@@ -1,13 +1,51 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState, useCallback } from "react";
 import CVEditor from "@/components/cv-builder/CVEditor";
 import CVPreview from "@/components/cv-builder/CVPreview";
 import Navbar from "@/components/cv-builder/Navbar";
 import { Eye, Pencil } from "lucide-react";
 
+// Chevron SVG used in the scroll FAB
+function ChevronIcon({ flipped }: { flipped: boolean }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      style={{
+        width: 16,
+        height: 16,
+        transition: "transform 280ms ease",
+        transform: flipped ? "rotate(180deg)" : "rotate(0deg)",
+      }}
+    >
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  );
+}
+
 export default function Home() {
   const [mobileTab, setMobileTab] = useState<"preview" | "editor">("editor");
+
+  // Editor scroll tracking for the FAB
+  const editorScrollRef = useRef<HTMLDivElement | null>(null);
+  const [editorAtBottom, setEditorAtBottom] = useState(false);
+
+  const onEditorScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    setEditorAtBottom(el.scrollTop + el.clientHeight >= el.scrollHeight - 40);
+  }, []);
+
+  const toggleEditorScroll = () => {
+    const el = editorScrollRef.current;
+    if (!el) return;
+    el.scrollTo({ top: editorAtBottom ? 0 : el.scrollHeight, behavior: "smooth" });
+  };
 
   return (
     <div className="flex flex-col h-[100dvh] bg-slate-50 dark:bg-[#09090b] text-foreground overflow-hidden selection:bg-primary/30">
@@ -16,92 +54,107 @@ export default function Home() {
       {/* ── Main content area ── */}
       <div className="flex flex-1 overflow-hidden flex-row relative">
 
-        {/* Preview panel */}
+        {/* ── Preview panel ── */}
         <div
           className={`
-            flex-col overflow-hidden
-            bg-slate-100/50 dark:bg-muted/10 border-r
-            md:flex md:w-1/2
-            ${mobileTab === "preview" ? "flex w-full" : "hidden"}
+            relative overflow-hidden
+            bg-slate-100/60 dark:bg-muted/10 border-r
+            md:flex md:flex-col md:w-1/2
+            ${mobileTab === "preview" ? "flex flex-col w-full" : "hidden"}
           `}
         >
-          <div className="flex-1 overflow-auto flex justify-center p-3 md:p-4">
-            <CVPreview />
-          </div>
+          <CVPreview />
         </div>
 
-        {/* Editor panel */}
+        {/* ── Editor panel ── */}
         <div
           className={`
-            flex-col overflow-hidden
+            relative overflow-hidden
             bg-background/95 backdrop-blur
             shadow-[-10px_0_30px_-15px_rgba(0,0,0,0.1)] z-10
-            md:flex md:w-1/2
-            ${mobileTab === "editor" ? "flex w-full" : "hidden"}
+            md:flex md:flex-col md:w-1/2
+            ${mobileTab === "editor" ? "flex flex-col w-full" : "hidden"}
           `}
         >
-          <CVEditor />
+          <CVEditor scrollRef={editorScrollRef} onScroll={onEditorScroll} />
+
+          {/* Desktop-only scroll FAB (hidden on mobile, replaced by the shared bottom row) */}
+          <button
+            onClick={toggleEditorScroll}
+            title={editorAtBottom ? "Scroll to top" : "Scroll to bottom"}
+            className="md:flex hidden absolute bottom-4 right-4 z-30 w-10 h-10 rounded-full bg-black text-white dark:bg-white dark:text-black shadow-lg shadow-black/20 items-center justify-center transition-transform duration-200 hover:scale-110 active:scale-95 select-none"
+          >
+            <ChevronIcon flipped={editorAtBottom} />
+          </button>
         </div>
 
-        {/* ── Floating pill navigator (mobile only) ── */}
-        <div className="md:hidden absolute bottom-6 left-1/2 -translate-x-1/2 z-50">
-          {/* Outer glow ring */}
+        {/* ── Bottom bar — mobile only ──────────────────────────────────────
+            Single flex row: [pill nav] [scroll FAB]
+            Both sit at the same bottom-4, perfectly vertically aligned.       */}
+        <div className="md:hidden absolute bottom-4 left-0 right-0 z-50 flex items-center justify-center gap-2 px-4 pointer-events-none">
+
+          {/* Edit / Preview pill nav */}
           <div
-            className="absolute inset-0 rounded-full blur-xl opacity-40 transition-all duration-500 pointer-events-none"
+            className="relative flex items-center p-1 rounded-full pointer-events-auto"
             style={{
-              background:
-                mobileTab === "editor"
-                  ? "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary)/0.4))"
-                  : "linear-gradient(135deg, hsl(var(--primary)/0.4), hsl(var(--primary)))",
+              background: "rgba(0,0,0,0.88)",
+              backdropFilter: "blur(24px)",
+              WebkitBackdropFilter: "blur(24px)",
+              border: "1px solid rgba(255,255,255,0.10)",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.35)",
             }}
-          />
-
-          {/* Pill container */}
-          <div className="relative flex items-center gap-1 p-1.5 rounded-full border border-white/20 dark:border-white/10 bg-background/80 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.18)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
-
-            {/* Sliding active background */}
+          >
             <div
-              className="absolute top-1.5 bottom-1.5 rounded-full bg-primary shadow-[0_2px_12px_rgba(0,0,0,0.25)] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
               style={{
+                position: "absolute",
+                top: 4,
+                bottom: 4,
+                left: 4,
                 width: "calc(50% - 4px)",
-                left: mobileTab === "editor" ? "6px" : "calc(50% + 2px)",
+                borderRadius: 9999,
+                background: "#ffffff",
+                boxShadow: "0 2px 10px rgba(0,0,0,0.25)",
+                willChange: "transform",
+                transition: "transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+                transform: mobileTab === "editor"
+                  ? "translateX(0px)"
+                  : "translateX(calc(100% - 1px))",
               }}
             />
 
-            {/* Edit tab */}
             <button
               onClick={() => setMobileTab("editor")}
-              className={`relative z-10 flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors duration-200 select-none ${
-                mobileTab === "editor"
-                  ? "text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+              style={{ position: "relative", zIndex: 1 }}
+              className={`flex items-center gap-1.5 px-5 py-2.5 rounded-full text-[13px] font-semibold select-none ${
+                mobileTab === "editor" ? "text-black" : "text-white/60"
               }`}
             >
-              <Pencil
-                className={`transition-all duration-200 ${
-                  mobileTab === "editor" ? "w-3.5 h-3.5 scale-100" : "w-3.5 h-3.5 scale-90 opacity-70"
-                }`}
-              />
+              <Pencil className="w-3.5 h-3.5 ml-2 shrink-0" />
               <span>Edit</span>
             </button>
 
-            {/* Preview tab */}
             <button
               onClick={() => setMobileTab("preview")}
-              className={`relative z-10 flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors duration-200 select-none ${
-                mobileTab === "preview"
-                  ? "text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+              style={{ position: "relative", zIndex: 1 }}
+              className={`flex items-center gap-1.5 px-5 py-2.5 rounded-full text-[13px] font-semibold select-none ${
+                mobileTab === "preview" ? "text-black" : "text-white/60"
               }`}
             >
-              <Eye
-                className={`transition-all duration-200 ${
-                  mobileTab === "preview" ? "w-3.5 h-3.5 scale-100" : "w-3.5 h-3.5 scale-90 opacity-70"
-                }`}
-              />
+              <Eye className="w-3.5 h-3.5 ml-4 shrink-0" />
               <span>Preview</span>
             </button>
           </div>
+
+          {/* Scroll FAB — same row, same height, separated by gap-2 */}
+          <button
+            onClick={toggleEditorScroll}
+            title={editorAtBottom ? "Scroll to top" : "Scroll to bottom"}
+            className="pointer-events-auto w-12 h-12 rounded-full bg-black border-5 border-black text-white dark:bg-white dark:text-black flex items-center justify-center transition-transform duration-200 hover:scale-110 active:scale-95 select-none shrink-0"
+            style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.20)" }}
+          >
+            <ChevronIcon flipped={editorAtBottom} />
+          </button>
+
         </div>
 
       </div>

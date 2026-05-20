@@ -64,7 +64,7 @@ export default function MLTemplate({ data, settings }: TemplateProps) {
           </section>
         )}
 
-        {data.experience?.length > 0 && (
+        {settings.showExperience !== false && data.experience?.length > 0 && (
           <section>
             <SectionHeading icon={Briefcase} label="Experience" color={settings.primaryColor} style={headingStyle} />
             {data.experience.map((exp) => (

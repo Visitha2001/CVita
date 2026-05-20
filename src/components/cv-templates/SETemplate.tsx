@@ -139,7 +139,7 @@ export default function SETemplate({ data, settings }: TemplateProps) {
         </div>
         {/* main */}
         <div style={{ flex: 1, padding: pad, display: "flex", flexDirection: "column" }}>
-          {renderExperience(data, settings, gap)}
+          {settings.showExperience !== false && renderExperience(data, settings, gap)}
           {settings.showProjects && renderProjects(data, settings, gap)}
           {renderEducation(data, settings, gap)}
           {settings.showReferences && renderReferences(data, settings, gap)}
@@ -178,7 +178,7 @@ export default function SETemplate({ data, settings }: TemplateProps) {
             <p style={{ fontSize: "11px", lineHeight: 1.6 }}>{data.professionalSummary}</p>
           </section>
         )}
-        {renderExperience(data, settings, gap)}
+        {settings.showExperience !== false && renderExperience(data, settings, gap)}
         {settings.showProjects && renderProjects(data, settings, gap)}
         {renderEducation(data, settings, gap)}
         {data.skillCategories?.length ? renderSkillCategories(data, settings, gap) : renderSkills(data, settings, gap)}

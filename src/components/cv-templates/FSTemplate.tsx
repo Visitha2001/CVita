@@ -39,7 +39,7 @@ export default function FSTemplate({ data, settings }: TemplateProps) {
                 <p style={{ fontSize: "11px", lineHeight: 1.6 }}>{data.professionalSummary}</p>
               </section>
             )}
-            {data.experience?.length > 0 && (
+            {settings.showExperience !== false && data.experience?.length > 0 && (
               <section>
                 <SectionHeading icon={Briefcase} label="Experience" color={settings.primaryColor} style="leftbar" />
                 {data.experience.map((exp) => (
@@ -145,7 +145,7 @@ export default function FSTemplate({ data, settings }: TemplateProps) {
             <p style={{ fontSize: "11px", lineHeight: 1.6 }}>{data.professionalSummary}</p>
           </section>
         )}
-        {data.experience?.length > 0 && (
+        {settings.showExperience !== false && data.experience?.length > 0 && (
           <section>
             <SectionHeading icon={Briefcase} label="Experience" color={settings.primaryColor} style="leftbar" />
             {data.experience.map((exp) => (

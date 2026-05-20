@@ -12,10 +12,19 @@ import {
 import { toPng } from "html-to-image";
 import jsPDF from "jspdf";
 import { useI18n, LANG_OPTIONS } from "@/lib/i18n";
+import { useCVStore } from "@/store/useCVStore";
+import { spacingMap } from "@/components/cv-templates/shared";
+
+// A4 at 96 dpi (must match CVPreview.tsx)
+const A4_W_PX = 794;
 
 export default function Navbar() {
   const { setTheme, theme } = useTheme();
   const { t, lang, setLang } = useI18n();
+  const { settings } = useCVStore();
+
+  // Use the same outer padding as the CV spacing setting for PDF margins
+  const PAGE_MARGIN_MM = parseInt(spacingMap[settings.spacing ?? "standard"].outer);
 
   const getElement = () => document.getElementById("cv-preview-container");
 
@@ -23,11 +32,50 @@ export default function Navbar() {
     const el = getElement();
     if (!el) return;
     try {
-      const dataUrl = await toPng(el, { quality: 1, pixelRatio: 2 });
+      // Capture the element at its real A4 pixel size regardless of CSS transform.
+      const dataUrl = await toPng(el, {
+        quality: 1,
+        pixelRatio: 2,
+        width: A4_W_PX,
+        height: el.scrollHeight,   // full content height, not clipped
+        style: {
+          transform: "scale(1)",
+          transformOrigin: "top left",
+        },
+      });
+
       const pdf = new jsPDF("p", "mm", "a4");
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight);
+      const pdfW = pdf.internal.pageSize.getWidth();   // 210 mm
+      const pdfH = pdf.internal.pageSize.getHeight();  // 297 mm
+
+      // Content area after applying uniform top/bottom margin (Task 1.1)
+      const contentW = pdfW - PAGE_MARGIN_MM * 2;
+      const contentH = pdfH - PAGE_MARGIN_MM * 2;
+
+      // Work out how many pages the content needs.
+      const img = new Image();
+      await new Promise<void>((res) => { img.onload = () => res(); img.src = dataUrl; });
+      const imgNaturalH = img.naturalHeight;
+      const imgNaturalW = img.naturalWidth;
+
+      // Full mm height of the captured image (scaled to contentW)
+      const imgMmH = (imgNaturalH / imgNaturalW) * contentW;
+      const totalPages = Math.ceil(imgMmH / contentH);
+
+      for (let page = 0; page < totalPages; page++) {
+        if (page > 0) pdf.addPage();
+        // Shift the image up by page * contentH, then offset by top margin so
+        // content starts at PAGE_MARGIN_MM from the top on every page.
+        pdf.addImage(
+          dataUrl,
+          "PNG",
+          PAGE_MARGIN_MM,                          // x: left margin
+          PAGE_MARGIN_MM - page * contentH,        // y: top margin – page offset
+          contentW,                                // width inside margins
+          imgMmH,                                  // full image height
+        );
+      }
+
       pdf.save("cv.pdf");
     } catch (err) {
       console.error("Error generating PDF:", err);
@@ -38,7 +86,13 @@ export default function Navbar() {
     const el = getElement();
     if (!el) return;
     try {
-      const dataUrl = await toPng(el, { quality: 1, pixelRatio: 2 });
+      const dataUrl = await toPng(el, {
+        quality: 1,
+        pixelRatio: 2,
+        width: A4_W_PX,
+        height: el.scrollHeight,
+        style: { transform: "scale(1)", transformOrigin: "top left" },
+      });
       const link = document.createElement("a");
       link.href = dataUrl;
       link.download = "cv.png";
@@ -50,13 +104,50 @@ export default function Navbar() {
     }
   };
 
-  const downloadWord = () => {
+  const downloadWord = async () => {
     const el = getElement();
     if (!el) return;
+    // Clone the element so we can mutate safely without touching the live DOM.
+    const clone = el.cloneNode(true) as HTMLElement;
+
+    // Task 2.1 / 11-fix: embed the profile image as a base64 data URI at its
+    // *rendered* display size so Word shows it at the correct scale (not giant).
+    const imgEls = Array.from(clone.querySelectorAll<HTMLImageElement>("img"));
+    await Promise.all(
+      imgEls.map(async (cloneImg, idx) => {
+        const liveImg = el.querySelectorAll<HTMLImageElement>("img")[idx];
+        if (!liveImg || !liveImg.src || liveImg.naturalWidth === 0) return;
+        try {
+          // Use the rendered display rect so Word gets the same size as the UI.
+          const rect = liveImg.getBoundingClientRect();
+          const dispW = Math.round(rect.width)  || liveImg.naturalWidth;
+          const dispH = Math.round(rect.height) || liveImg.naturalHeight;
+
+          const canvas  = document.createElement("canvas");
+          canvas.width  = dispW;
+          canvas.height = dispH;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return;
+          // Draw the live image scaled to the display size
+          ctx.drawImage(liveImg, 0, 0, dispW, dispH);
+
+          // Replace both src and explicit size on the cloned element
+          cloneImg.src    = canvas.toDataURL("image/png");
+          cloneImg.width  = dispW;
+          cloneImg.height = dispH;
+          cloneImg.style.width  = `${dispW}px`;
+          cloneImg.style.height = `${dispH}px`;
+        } catch {
+          // Cross-origin: remove to avoid Word errors
+          cloneImg.remove();
+        }
+      })
+    );
+
     const header =
       "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>CV</title></head><body>";
     const footer = "</body></html>";
-    const source = "data:application/vnd.ms-word;charset=utf-8," + encodeURIComponent(header + el.innerHTML + footer);
+    const source = "data:application/vnd.ms-word;charset=utf-8," + encodeURIComponent(header + clone.innerHTML + footer);
     const a = document.createElement("a");
     a.href = source;
     a.download = "cv.doc";
