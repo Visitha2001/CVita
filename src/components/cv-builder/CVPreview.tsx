@@ -110,7 +110,9 @@ export default function CVPreview() {
         <div className="flex flex-col items-center py-4 md:py-8">
 
           {/* ── Hidden full-size render target (export target) ──────────────
-              Off-screen fixed element; scrollHeight always reflects real height. */}
+              We use position: fixed at (0,0) with opacity: 0.01 and z-index: -100 so it
+              is fully laid out by the browser (avoiding display: none / off-screen clipping issues)
+              but completely invisible to the user. html2canvas will clone and render it perfectly. */}
           <div
             id="cv-preview-container"
             ref={hiddenRef}
@@ -118,13 +120,14 @@ export default function CVPreview() {
             style={{
               position: "fixed",
               top: 0,
-              left: "-9999px",
+              left: 0,
               width: `${A4_W_PX}px`,
               fontFamily: settings.fontFamily,
               color: settings.fontColor,
               background: "white",
               pointerEvents: "none",
-              zIndex: -1,
+              zIndex: -100,
+              opacity: 0.01,
             }}
           >
             <TemplateRouter data={cvData} settings={settings} />

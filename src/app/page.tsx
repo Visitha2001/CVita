@@ -60,7 +60,7 @@ export default function Home() {
             relative overflow-hidden
             bg-slate-100/60 dark:bg-muted/10 border-r
             md:flex md:flex-col md:w-1/2
-            ${mobileTab === "preview" ? "flex flex-col w-full" : "hidden"}
+            ${mobileTab === "preview" ? "flex flex-col w-full" : "w-0 h-0 opacity-0 pointer-events-none md:flex md:flex-col md:w-1/2 md:h-auto md:opacity-100 md:pointer-events-auto"}
           `}
         >
           <CVPreview />

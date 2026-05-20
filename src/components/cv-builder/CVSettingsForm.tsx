@@ -95,7 +95,7 @@ export default function CVSettingsForm() {
   const { settings, setSettings } = useCVStore();
 
   return (
-    <div className="space-y-7 max-w-2xl mx-auto pb-12">
+    <div className="space-y-7 max-w-2xl mx-auto pt-4 sm:pt-6 pb-12">
 
       {/* Accent Color */}
       <Section title="Accent Color" desc="Used for headings, borders and skill tags">
