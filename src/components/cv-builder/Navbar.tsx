@@ -13,6 +13,9 @@ import { toPng } from "html-to-image";
 import jsPDF from "jspdf";
 import { useI18n, LANG_OPTIONS } from "@/lib/i18n";
 
+// A4 at 96 dpi (must match CVPreview.tsx)
+const A4_W_PX = 794;
+
 export default function Navbar() {
   const { setTheme, theme } = useTheme();
   const { t, lang, setLang } = useI18n();
@@ -23,11 +26,39 @@ export default function Navbar() {
     const el = getElement();
     if (!el) return;
     try {
-      const dataUrl = await toPng(el, { quality: 1, pixelRatio: 2 });
+      // Capture the element at its real A4 pixel size regardless of CSS transform.
+      // This fixes the mobile 25%-blank-page bug AND enables multi-page support.
+      const dataUrl = await toPng(el, {
+        quality: 1,
+        pixelRatio: 2,
+        width: A4_W_PX,
+        height: el.scrollHeight,   // full content height, not clipped
+        style: {
+          transform: "scale(1)",
+          transformOrigin: "top left",
+        },
+      });
+
       const pdf = new jsPDF("p", "mm", "a4");
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight);
+      const pdfWidth  = pdf.internal.pageSize.getWidth();   // 210 mm
+      const pdfHeight = pdf.internal.pageSize.getHeight();  // 297 mm
+
+      // Work out how many pages the content needs.
+      const img = new Image();
+      await new Promise<void>((res) => { img.onload = () => res(); img.src = dataUrl; });
+      const imgNaturalH = img.naturalHeight;
+      const imgNaturalW = img.naturalWidth;
+
+      // mm height of the captured image (scaled to pdfWidth)
+      const imgMmH = (imgNaturalH / imgNaturalW) * pdfWidth;
+      const totalPages = Math.ceil(imgMmH / pdfHeight);
+
+      for (let page = 0; page < totalPages; page++) {
+        if (page > 0) pdf.addPage();
+        // y-offset in mm for this page slice
+        pdf.addImage(dataUrl, "PNG", 0, -(page * pdfHeight), pdfWidth, imgMmH);
+      }
+
       pdf.save("cv.pdf");
     } catch (err) {
       console.error("Error generating PDF:", err);
@@ -38,7 +69,13 @@ export default function Navbar() {
     const el = getElement();
     if (!el) return;
     try {
-      const dataUrl = await toPng(el, { quality: 1, pixelRatio: 2 });
+      const dataUrl = await toPng(el, {
+        quality: 1,
+        pixelRatio: 2,
+        width: A4_W_PX,
+        height: el.scrollHeight,
+        style: { transform: "scale(1)", transformOrigin: "top left" },
+      });
       const link = document.createElement("a");
       link.href = dataUrl;
       link.download = "cv.png";
@@ -53,10 +90,15 @@ export default function Navbar() {
   const downloadWord = () => {
     const el = getElement();
     if (!el) return;
+    // Clone the element so we can safely strip images without affecting the DOM.
+    const clone = el.cloneNode(true) as HTMLElement;
+    // Remove all <img> elements — Word cannot resolve blob/data URLs from
+    // html-to-image proxies, which causes the file to fail to open.
+    clone.querySelectorAll("img").forEach((img) => img.remove());
     const header =
       "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>CV</title></head><body>";
     const footer = "</body></html>";
-    const source = "data:application/vnd.ms-word;charset=utf-8," + encodeURIComponent(header + el.innerHTML + footer);
+    const source = "data:application/vnd.ms-word;charset=utf-8," + encodeURIComponent(header + clone.innerHTML + footer);
     const a = document.createElement("a");
     a.href = source;
     a.download = "cv.doc";

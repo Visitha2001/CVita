@@ -47,22 +47,24 @@ export default function CVPreview() {
   return (
     <div ref={wrapRef} className="w-full flex justify-center py-4 md:py-8">
       <style>{`@import url('${fontUrl}');`}</style>
-      {/* Outer shell maintains correct height for the scaled A4 */}
+      {/* Outer shell: fixed visible height for the preview UI */}
       <div
         style={{
           width: `${A4_W_PX * scale}px`,
           height: `${A4_H_PX * scale}px`,
           position: "relative",
           flexShrink: 0,
+          overflow: "hidden",
         }}
       >
-        {/* Inner A4 rendered at full size, then scaled */}
+        {/* Inner A4 rendered at full size, then CSS-scaled down for preview.
+            No fixed height / overflow-hidden here so scrollHeight reflects
+            the true content height and multi-page exports work correctly. */}
         <div
           id="cv-preview-container"
-          className="shadow-2xl bg-white overflow-hidden"
+          className="shadow-2xl bg-white"
           style={{
             width: `${A4_W_PX}px`,
-            height: `${A4_H_PX}px`,
             transform: `scale(${scale})`,
             transformOrigin: "top left",
             position: "absolute",

@@ -30,6 +30,7 @@ const shapes = [
 
 const visibilityToggles = [
   { key: "showSummary"        as const, label: "Professional Summary" },
+  { key: "showExperience"     as const, label: "Experience" },
   { key: "showProjects"       as const, label: "Projects" },
   { key: "showCertifications" as const, label: "Certifications" },
   { key: "showLanguages"      as const, label: "Languages" },

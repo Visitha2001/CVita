@@ -89,6 +89,7 @@ export interface CVSettings {
   profilePictureShape: 'circle' | 'square' | 'rounded';
   spacing: 'compact' | 'standard' | 'spacious';
   showSummary: boolean;
+  showExperience: boolean;
   showProjects: boolean;
   showCertifications: boolean;
   showLanguages: boolean;
@@ -170,6 +171,7 @@ const initialSettings: CVSettings = {
   profilePictureShape: 'circle',
   spacing: 'standard',
   showSummary: true,
+  showExperience: true,
   showProjects: true,
   showCertifications: true,
   showLanguages: true,
