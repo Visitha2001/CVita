@@ -77,7 +77,7 @@ export default function CVEditor({ scrollRef, onScroll }: CVEditorProps) {
       <div
         ref={scrollRef as React.RefObject<HTMLDivElement>}
         onScroll={onScroll}
-        className="flex-1 overflow-auto px-3 sm:px-4 py-4 sm:py-6"
+        className="flex-1 overflow-auto px-3 sm:px-4"
       >
         {active === "data"      && <CVDataForm />}
         {active === "settings"  && <CVSettingsForm />}

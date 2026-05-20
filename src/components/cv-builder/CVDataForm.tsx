@@ -429,7 +429,7 @@ export default function CVDataForm() {
   }
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto pb-12">
+    <div className="space-y-6 max-w-2xl mx-auto pt-4 sm:pt-6 pb-12">
 
       {/* ── Header row with clear button ── */}
       <div className="flex items-center justify-between">

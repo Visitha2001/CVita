@@ -138,7 +138,7 @@ export default function CVTemplatesList() {
   const previewProps: TemplateProps = { data: cvData, settings };
 
   return (
-    <div className="max-w-2xl mx-auto pb-10 space-y-5">
+    <div className="max-w-2xl mx-auto pt-4 sm:pt-6 pb-10 space-y-5">
       <div>
         <h2 className="text-xl font-bold tracking-tight">Choose a Template</h2>
         <p className="text-xs text-muted-foreground mt-0.5">{TEMPLATES.length} templates · {CATEGORIES.length - 1} categories</p>

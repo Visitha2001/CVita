@@ -41,6 +41,7 @@ export default function Navbar() {
         style: {
           transform: "scale(1)",
           transformOrigin: "top left",
+          opacity: "1", // Force fully visible capture, overriding the 0.01 layout hack
         },
       });
 
@@ -48,7 +49,7 @@ export default function Navbar() {
       const pdfW = pdf.internal.pageSize.getWidth();   // 210 mm
       const pdfH = pdf.internal.pageSize.getHeight();  // 297 mm
 
-      // Content area after applying uniform top/bottom margin (Task 1.1)
+      // Content area after applying uniform top/bottom margin
       const contentW = pdfW - PAGE_MARGIN_MM * 2;
       const contentH = pdfH - PAGE_MARGIN_MM * 2;
 
@@ -91,7 +92,11 @@ export default function Navbar() {
         pixelRatio: 2,
         width: A4_W_PX,
         height: el.scrollHeight,
-        style: { transform: "scale(1)", transformOrigin: "top left" },
+        style: { 
+          transform: "scale(1)", 
+          transformOrigin: "top left",
+          opacity: "1", 
+        },
       });
       const link = document.createElement("a");
       link.href = dataUrl;
