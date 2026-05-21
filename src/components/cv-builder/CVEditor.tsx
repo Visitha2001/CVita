@@ -24,47 +24,24 @@ export default function CVEditor({ scrollRef, onScroll }: CVEditorProps) {
   const { t } = useI18n();
   const [active, setActive] = useState<Tab>("data");
 
+
   return (
     <div className="flex flex-col h-full overflow-hidden">
 
-      {/* ── iOS-style segmented tab bar ─────────────────────────────────── */}
-      <div className="px-3 sm:px-4 pt-3 sm:pt-4 pb-2.5 border-b bg-background/80 backdrop-blur-sm shrink-0">
-        <div className="relative flex items-center rounded-[13px] bg-muted/50 dark:bg-muted/25 p-1">
-
-          {/* Sliding pill indicator — GPU-composited, no layout reflow */}
-          <div
-            style={{
-              position: "absolute",
-              top: 4,
-              bottom: 4,
-              left: 4,
-              width: "calc(33.333% - 2.67px)",
-              borderRadius: 10,
-              background: "var(--background)",
-              boxShadow: "0 1px 4px rgba(0,0,0,0.12)",
-              willChange: "transform",
-              transition: "transform 220ms cubic-bezier(0.4, 0, 0.2, 1)",
-              transform: `translateX(calc(${TABS.findIndex(tab => tab.id === active)} * (100% + 4px)))`,
-            }}
-          />
-
+      {/* ── Sleek Segmented Control Tab Bar ─────────────── */}
+      <div className="px-3 sm:px-4 pt-4 pb-3 border-b bg-background/95 backdrop-blur-sm shrink-0">
+        <div className="flex p-1 bg-muted/60 border border-border/50 rounded-[14px] shadow-inner">
           {TABS.map(({ id, icon: Icon, labelKey }) => (
             <button
               key={id}
               onClick={() => setActive(id)}
-              className={`relative z-10 flex-1 flex items-center justify-center gap-1.5 py-[9px] px-2 rounded-[10px] text-[13px] font-semibold transition-colors duration-200 select-none ${
+              className={`relative flex-1 flex items-center justify-center gap-2 py-2 px-3 text-[13px] font-medium transition-all duration-300 rounded-[10px] select-none ${
                 active === id
-                  ? "text-foreground"
-                  : "text-muted-foreground/70 hover:text-muted-foreground"
+                  ? "bg-foreground text-background shadow-md"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
               }`}
             >
-              <Icon
-                className={`shrink-0 transition-all duration-200 ${
-                  active === id
-                    ? "w-[15px] h-[15px] text-primary"
-                    : "w-[15px] h-[15px]"
-                }`}
-              />
+              <Icon className={`w-[15px] h-[15px] shrink-0 transition-colors duration-300 ${active === id ? "text-background" : "text-muted-foreground"}`} />
               <span className="hidden min-[360px]:inline truncate">
                 {t[labelKey]}
               </span>

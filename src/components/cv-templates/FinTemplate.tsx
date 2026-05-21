@@ -140,7 +140,7 @@ export default function FinTemplate({ data, settings }: TemplateProps) {
         {/* Dark sidebar */}
         <div style={{ width: "36%", background: settings.primaryColor, color: "white", padding: pad, display: "flex", flexDirection: "column", gap }}>
           {showImage && data.image && (
-            <ProfileImage src={data.image} shape={settings.profilePictureShape} className="w-24 h-24 border-2 border-white/30" />
+            <ProfileImage src={data.image} shape={settings.profilePictureShape} showRing={settings.showProfileRing} ringColor={settings.primaryColor} className="w-24 h-24 border-2 border-white/30" />
           )}
           <div>
             <h1 style={{ fontSize: "18px", fontWeight: 700, lineHeight: 1.2, letterSpacing: "-0.01em" }}>{data.name}</h1>
@@ -194,7 +194,7 @@ export default function FinTemplate({ data, settings }: TemplateProps) {
       <header style={{ padding: `${sp.inner}mm ${pad}`, textAlign: "center", borderBottom: `2px solid ${settings.primaryColor}`, marginBottom: "0" }}>
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "16px" }}>
           {showImage && data.image && (
-            <ProfileImage src={data.image} shape={settings.profilePictureShape} className="w-20 h-20" />
+            <ProfileImage src={data.image} shape={settings.profilePictureShape} showRing={settings.showProfileRing} ringColor={settings.primaryColor} className="w-20 h-20" />
           )}
           <div>
             <h1 style={{ fontSize: "26px", fontWeight: 700, letterSpacing: "-0.01em", color: settings.primaryColor }}>{data.name}</h1>

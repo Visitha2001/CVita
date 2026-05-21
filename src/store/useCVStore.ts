@@ -94,6 +94,7 @@ export interface CVSettings {
   showCertifications: boolean;
   showLanguages: boolean;
   showReferences: boolean;
+  showProfileRing: boolean;
 }
 
 // Base type that all array-item entries must satisfy
@@ -176,6 +177,7 @@ const initialSettings: CVSettings = {
   showCertifications: true,
   showLanguages: true,
   showReferences: false,
+  showProfileRing: true,
 };
 
 export const useCVStore = create<CVStore>((set) => ({

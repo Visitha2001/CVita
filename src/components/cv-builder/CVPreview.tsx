@@ -38,13 +38,25 @@ export default function CVPreview() {
 
   const [scale, setScale]         = useState(1);
   const [pageCount, setPageCount] = useState(1);
-  const [atBottom, setAtBottom]   = useState(false);
+  const [mounted, setMounted]     = useState(false);
+
+  // Magnifier state
+  const [magOn, setMagOn]         = useState(false);
+  const [magPos, setMagPos]       = useState({ x: 0, y: 0 });
+  const [magVisible, setMagVisible] = useState(false);
+  const previewAreaRef = useRef<HTMLDivElement>(null);
 
   const fontUrl = `https://fonts.googleapis.com/css2?family=${settings.fontFamily.replace(/ /g, "+")}:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap`;
 
   // Outer padding from spacing setting (same mm values the templates use)
   const spacingPadMm  = parseInt(spacingMap[settings.spacing ?? "standard"].outer);
   const spacingPadPx  = spacingPadMm * MM_TO_PX; // px at full A4 scale
+
+  // Page-load animation
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   // Recalculate scale whenever the wrapper resizes
   useEffect(() => {
@@ -76,26 +88,51 @@ export default function CVPreview() {
   const handleScroll = useCallback(() => {
     const el = scrollRef.current;
     if (!el) return;
-    const { scrollTop, scrollHeight, clientHeight } = el;
-    setAtBottom(scrollTop + clientHeight >= scrollHeight - 40);
   }, []);
 
-  const scrollToggle = () => {
-    const el = scrollRef.current;
-    if (!el) return;
-    el.scrollTo({ top: atBottom ? 0 : el.scrollHeight, behavior: "smooth" });
-  };
+
+
+  // Magnifier mouse tracking
+  const handleMagMove = useCallback((e: React.MouseEvent) => {
+    if (!magOn || !previewAreaRef.current) return;
+    const rect = previewAreaRef.current.getBoundingClientRect();
+    setMagPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    setMagVisible(true);
+  }, [magOn]);
+
+  const handleMagLeave = useCallback(() => {
+    setMagVisible(false);
+  }, []);
 
   // Total visual height of the paginated preview at current scale
   const totalVisualH = (A4_H_PX * pageCount + PAGE_GAP_PX * (pageCount - 1)) * scale;
 
+  const MAG_SIZE = 180;
+  const MAG_ZOOM = 2.5;
+
   return (
-    // scrollRef is the scrollable container – page.tsx wraps CVPreview in
-    // overflow-auto, so we need to reach that element. We pass scrollRef via
-    // a callback ref on the wrapper so that the parent overflow-auto div
-    // is targeted. Instead, we'll make this component own a scroll container.
-    <div className="w-full h-full flex flex-col overflow-hidden relative">
+    <div
+      className="w-full h-full flex flex-col overflow-hidden relative"
+      style={{
+        opacity: mounted ? 1 : 0,
+        transform: mounted ? "translateY(0)" : "translateY(12px)",
+        transition: "opacity 500ms ease, transform 500ms ease",
+      }}
+    >
       <style>{`@import url('${fontUrl}');`}</style>
+
+      {/* Magnifier toggle button */}
+      <button
+        onClick={() => { setMagOn(!magOn); setMagVisible(false); }}
+        title={magOn ? "Disable magnifier" : "Enable magnifier"}
+        className={`absolute top-3 right-3 z-30 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200 select-none ${
+          magOn
+            ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-110"
+            : "bg-background/80 text-muted-foreground border border-border hover:border-primary/50 hover:text-primary"
+        }`}
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+      </button>
 
       {/* Scrollable preview area */}
       <div
@@ -135,11 +172,15 @@ export default function CVPreview() {
 
           {/* ── Paginated visual preview ─────────────────────────────────── */}
           <div
+            ref={previewAreaRef}
+            onMouseMove={handleMagMove}
+            onMouseLeave={handleMagLeave}
             style={{
               width:    `${A4_W_PX * scale}px`,
               height:   `${totalVisualH}px`,
               position: "relative",
               flexShrink: 0,
+              cursor: magOn ? "none" : "default",
             }}
           >
             {Array.from({ length: pageCount }, (_, i) => (
@@ -198,6 +239,41 @@ export default function CVPreview() {
                 </div>
               </div>
             ))}
+
+            {/* ── Magnifier lens ─────────────────────────────────────────── */}
+            {magOn && magVisible && (
+              <div
+                style={{
+                  position: "absolute",
+                  left: magPos.x - MAG_SIZE / 2,
+                  top: magPos.y - MAG_SIZE / 2,
+                  width: MAG_SIZE,
+                  height: MAG_SIZE,
+                  borderRadius: "50%",
+                  border: "3px solid rgba(0,0,0,0.25)",
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.3), inset 0 0 0 1px rgba(255,255,255,0.2)",
+                  overflow: "hidden",
+                  pointerEvents: "none",
+                  zIndex: 50,
+                  background: "white",
+                }}
+              >
+                <div
+                  style={{
+                    width: `${A4_W_PX}px`,
+                    transformOrigin: "top left",
+                    transform: `scale(${MAG_ZOOM}) translate(${-(magPos.x / scale) + MAG_SIZE / (2 * MAG_ZOOM)}px, ${-(magPos.y / scale) + MAG_SIZE / (2 * MAG_ZOOM)}px)`,
+                    fontFamily: settings.fontFamily,
+                    color: settings.fontColor,
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                  }}
+                >
+                  <TemplateRouter data={cvData} settings={settings} />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Bottom breathing room */}

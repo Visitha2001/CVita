@@ -1,0 +1,360 @@
+{
+  "se": {
+    "name": "Sarah Chen",
+    "professionalSummary": "Results-driven Software Engineer with 6+ years of experience in designing, developing, and deploying high-performance web and cloud applications. Expert in React, TypeScript, and distributed systems architecture with a passion for clean code and developer tooling.",
+    "address": "San Francisco, CA",
+    "phone": "+1 415 555 0192",
+    "email": "sarah.chen@techmail.com",
+    "website": "https://sarahchen.dev",
+    "socialMedia": [
+      { "platform": "GitHub", "url": "https://github.com/sarahchen-dev" },
+      { "platform": "LinkedIn", "url": "https://linkedin.com/in/sarahchen" }
+    ],
+    "experience": [
+      {
+        "id": "se-exp-1",
+        "company": "Stripe",
+        "role": "Senior Software Engineer",
+        "startDate": "2022-03",
+        "endDate": "Present",
+        "description": "Lead the Payments API team building merchant-facing checkout flows serving 2M+ daily transactions. Reduced p99 latency by 35% through query optimization and caching strategies.",
+        "skills": ["TypeScript", "React", "Go", "PostgreSQL", "Redis"]
+      },
+      {
+        "id": "se-exp-2",
+        "company": "Vercel",
+        "role": "Software Engineer",
+        "startDate": "2019-06",
+        "endDate": "2022-02",
+        "description": "Built core components for the Next.js deployment platform. Implemented incremental static regeneration and contributed to the open-source framework.",
+        "skills": ["Next.js", "Node.js", "AWS", "Docker"]
+      }
+    ],
+    "education": [
+      {
+        "id": "se-edu-1",
+        "institution": "Stanford University",
+        "degree": "B.S. Computer Science",
+        "startDate": "2015-09",
+        "endDate": "2019-06"
+      }
+    ],
+    "projects": [
+      {
+        "id": "se-proj-1",
+        "name": "DevDash",
+        "description": "Open-source developer dashboard aggregating GitHub, Jira, and Slack notifications into a single real-time feed. 2.3k stars on GitHub.",
+        "skills": ["React", "WebSockets", "GraphQL"],
+        "link": "https://github.com/sarahchen-dev/devdash"
+      },
+      {
+        "id": "se-proj-2",
+        "name": "TypeGuard CLI",
+        "description": "A CLI tool that auto-generates runtime type validators from TypeScript interfaces, reducing boilerplate by 60%.",
+        "skills": ["TypeScript", "Node.js", "AST Parsing"],
+        "link": "https://github.com/sarahchen-dev/typeguard"
+      }
+    ],
+    "skills": ["TypeScript", "React", "Next.js", "Node.js", "Go", "PostgreSQL", "Redis", "Docker", "AWS", "GraphQL", "CI/CD", "System Design"],
+    "skillCategories": [
+      { "id": "se-sc-1", "name": "Frontend", "skills": ["React", "Next.js", "TypeScript", "Tailwind CSS"] },
+      { "id": "se-sc-2", "name": "Backend", "skills": ["Node.js", "Go", "PostgreSQL", "Redis"] }
+    ],
+    "certifications": [
+      { "id": "se-cert-1", "name": "AWS Solutions Architect – Associate", "issuer": "Amazon Web Services", "date": "2021-08" }
+    ],
+    "awards": [],
+    "languages": ["English (Native)", "Mandarin (Fluent)"],
+    "interests": ["Open Source", "Rock Climbing", "Mechanical Keyboards"],
+    "references": []
+  },
+  "ml": {
+    "name": "Dr. Arun Patel",
+    "professionalSummary": "Machine Learning Researcher and Engineer with 5+ years of experience in NLP, computer vision, and reinforcement learning. Published 8 papers in top-tier venues (NeurIPS, ICML, ACL). Passionate about making AI systems more interpretable and robust.",
+    "address": "Cambridge, MA",
+    "phone": "+1 617 555 0234",
+    "email": "arun.patel@researchlab.ai",
+    "website": "https://arunpatel.ai",
+    "socialMedia": [
+      { "platform": "GitHub", "url": "https://github.com/arunpatel-ml" },
+      { "platform": "LinkedIn", "url": "https://linkedin.com/in/arunpatel-ml" }
+    ],
+    "experience": [
+      {
+        "id": "ml-exp-1",
+        "company": "Google DeepMind",
+        "role": "Research Scientist",
+        "startDate": "2021-09",
+        "endDate": "Present",
+        "description": "Developing novel transformer architectures for multi-modal reasoning. Led a team of 4 researchers that achieved SOTA on the MMLU benchmark, improving accuracy by 4.2%.",
+        "skills": ["PyTorch", "JAX", "Transformers", "Distributed Training"]
+      },
+      {
+        "id": "ml-exp-2",
+        "company": "MIT CSAIL",
+        "role": "Research Assistant",
+        "startDate": "2018-09",
+        "endDate": "2021-08",
+        "description": "Investigated attention mechanisms in language models. Published 3 first-author papers at NeurIPS and ACL on interpretability and sparse attention.",
+        "skills": ["Python", "TensorFlow", "NLP", "Research"]
+      }
+    ],
+    "education": [
+      {
+        "id": "ml-edu-1",
+        "institution": "Massachusetts Institute of Technology",
+        "degree": "Ph.D. in Computer Science (Machine Learning)",
+        "startDate": "2018-09",
+        "endDate": "2023-06"
+      },
+      {
+        "id": "ml-edu-2",
+        "institution": "Indian Institute of Technology, Bombay",
+        "degree": "B.Tech in Computer Science",
+        "startDate": "2014-08",
+        "endDate": "2018-05"
+      }
+    ],
+    "projects": [
+      {
+        "id": "ml-proj-1",
+        "name": "SparseAttn",
+        "description": "Open-source library implementing 12 sparse attention patterns for efficient transformer training. Used by 500+ researchers worldwide.",
+        "skills": ["PyTorch", "CUDA", "C++"],
+        "link": "https://github.com/arunpatel-ml/sparseattn"
+      }
+    ],
+    "skills": ["PyTorch", "JAX", "TensorFlow", "Python", "CUDA", "NLP", "Computer Vision", "Reinforcement Learning", "Distributed Training", "MLOps"],
+    "skillCategories": [
+      { "id": "ml-sc-1", "name": "ML Frameworks", "skills": ["PyTorch", "JAX", "TensorFlow", "Hugging Face"] },
+      { "id": "ml-sc-2", "name": "Research Areas", "skills": ["NLP", "Interpretability", "Multi-modal AI"] }
+    ],
+    "certifications": [],
+    "awards": [
+      { "id": "ml-aw-1", "name": "Best Paper Award – NeurIPS 2022", "issuer": "NeurIPS", "date": "2022-12" }
+    ],
+    "languages": ["English (Fluent)", "Hindi (Native)", "French (Basic)"],
+    "interests": ["AI Safety", "Chess", "Science Fiction"],
+    "references": []
+  },
+  "fs": {
+    "name": "Maria Rodriguez",
+    "professionalSummary": "Full-Stack Developer with 7 years of hands-on experience building end-to-end web applications. Proficient across the entire stack from pixel-perfect UIs to scalable microservices and DevOps pipelines. Thrives in fast-paced startup environments.",
+    "address": "Austin, TX",
+    "phone": "+1 512 555 0178",
+    "email": "maria.r@devstudio.io",
+    "website": "https://mariarodriguez.dev",
+    "socialMedia": [
+      { "platform": "GitHub", "url": "https://github.com/maria-fullstack" },
+      { "platform": "LinkedIn", "url": "https://linkedin.com/in/mariarodriguez-dev" },
+      { "platform": "Portfolio", "url": "https://mariarodriguez.dev/portfolio" }
+    ],
+    "experience": [
+      {
+        "id": "fs-exp-1",
+        "company": "Figma",
+        "role": "Staff Engineer",
+        "startDate": "2021-01",
+        "endDate": "Present",
+        "description": "Architected the real-time collaboration engine for FigJam, supporting 50+ concurrent editors per board. Reduced WebSocket reconnection failures by 80%.",
+        "skills": ["TypeScript", "React", "Rust", "WebSockets", "PostgreSQL"]
+      },
+      {
+        "id": "fs-exp-2",
+        "company": "Shopify",
+        "role": "Senior Full-Stack Developer",
+        "startDate": "2018-04",
+        "endDate": "2020-12",
+        "description": "Built merchant analytics dashboard processing 10M+ events daily. Designed the GraphQL API layer and implemented real-time data visualization components.",
+        "skills": ["Ruby on Rails", "React", "GraphQL", "Kafka"]
+      }
+    ],
+    "education": [
+      {
+        "id": "fs-edu-1",
+        "institution": "University of Texas at Austin",
+        "degree": "B.S. in Computer Science",
+        "startDate": "2014-08",
+        "endDate": "2018-05"
+      }
+    ],
+    "projects": [
+      {
+        "id": "fs-proj-1",
+        "name": "CollabBoard",
+        "description": "Real-time collaborative whiteboard app with drawing, sticky notes, and video chat. Built with Next.js, Socket.io, and Canvas API.",
+        "skills": ["Next.js", "Socket.io", "Canvas API", "WebRTC"],
+        "link": "https://collabboard.dev"
+      },
+      {
+        "id": "fs-proj-2",
+        "name": "APIForge",
+        "description": "Visual API builder that generates REST and GraphQL endpoints from a drag-and-drop schema designer.",
+        "skills": ["Vue.js", "Node.js", "PostgreSQL"],
+        "link": "https://github.com/maria-fullstack/apiforge"
+      }
+    ],
+    "skills": ["TypeScript", "React", "Next.js", "Vue.js", "Node.js", "Ruby on Rails", "PostgreSQL", "MongoDB", "Docker", "Kubernetes", "GraphQL", "AWS"],
+    "skillCategories": [
+      { "id": "fs-sc-1", "name": "Frontend", "skills": ["React", "Next.js", "Vue.js", "Tailwind CSS"] },
+      { "id": "fs-sc-2", "name": "Backend", "skills": ["Node.js", "Ruby on Rails", "GraphQL", "REST"] },
+      { "id": "fs-sc-3", "name": "Infrastructure", "skills": ["Docker", "Kubernetes", "AWS", "CI/CD"] }
+    ],
+    "certifications": [
+      { "id": "fs-cert-1", "name": "Google Cloud Professional Developer", "issuer": "Google Cloud", "date": "2022-05" }
+    ],
+    "awards": [],
+    "languages": ["English (Native)", "Spanish (Native)"],
+    "interests": ["Hackathons", "UI Design", "Salsa Dancing"],
+    "references": []
+  },
+  "fin": {
+    "name": "James Worthington III",
+    "professionalSummary": "Seasoned finance professional with 10+ years of experience in investment banking, portfolio management, and quantitative analysis. Proven track record of managing $500M+ AUM and executing complex M&A transactions across technology and healthcare sectors.",
+    "address": "New York, NY",
+    "phone": "+1 212 555 0456",
+    "email": "j.worthington@globalcap.com",
+    "website": "https://jamesworthington.com",
+    "socialMedia": [
+      { "platform": "LinkedIn", "url": "https://linkedin.com/in/jamesworthington" }
+    ],
+    "experience": [
+      {
+        "id": "fin-exp-1",
+        "company": "Goldman Sachs",
+        "role": "Vice President – Technology M&A",
+        "startDate": "2020-01",
+        "endDate": "Present",
+        "description": "Lead advisor on 12 technology M&A transactions totaling $4.2B in aggregate value. Managed cross-functional teams of 8–15 analysts and associates across global offices.",
+        "skills": ["Financial Modeling", "M&A Advisory", "Due Diligence", "Valuation"]
+      },
+      {
+        "id": "fin-exp-2",
+        "company": "Morgan Stanley",
+        "role": "Associate – Investment Banking",
+        "startDate": "2016-07",
+        "endDate": "2019-12",
+        "description": "Executed IPOs, secondary offerings, and debt financings for Fortune 500 clients. Built complex LBO and DCF models for healthcare sector transactions.",
+        "skills": ["DCF Analysis", "LBO Modeling", "Capital Markets", "Client Relations"]
+      }
+    ],
+    "education": [
+      {
+        "id": "fin-edu-1",
+        "institution": "The Wharton School, UPenn",
+        "degree": "MBA, Finance & Strategy",
+        "startDate": "2014-08",
+        "endDate": "2016-05"
+      },
+      {
+        "id": "fin-edu-2",
+        "institution": "Yale University",
+        "degree": "B.A. in Economics, Summa Cum Laude",
+        "startDate": "2010-09",
+        "endDate": "2014-05"
+      }
+    ],
+    "projects": [
+      {
+        "id": "fin-proj-1",
+        "name": "TechCo Acquisition ($1.8B)",
+        "description": "Lead advisor for the acquisition of a SaaS platform by a Fortune 100 technology conglomerate. Managed due diligence, valuation, and negotiation process.",
+        "skills": ["M&A", "Valuation", "Negotiation"]
+      },
+      {
+        "id": "fin-proj-2",
+        "name": "HealthGen IPO ($650M)",
+        "description": "Co-managed the initial public offering of a biotech company, pricing at a 22% premium to initial guidance.",
+        "skills": ["IPO", "Capital Markets", "Investor Relations"]
+      }
+    ],
+    "skills": ["Financial Modeling", "M&A Advisory", "DCF Analysis", "LBO Modeling", "Capital Markets", "Valuation", "Due Diligence", "Bloomberg Terminal", "Excel/VBA", "Python"],
+    "skillCategories": [
+      { "id": "fin-sc-1", "name": "Core Finance", "skills": ["Financial Modeling", "DCF", "LBO", "Valuation"] },
+      { "id": "fin-sc-2", "name": "Advisory", "skills": ["M&A", "Due Diligence", "Capital Markets"] }
+    ],
+    "certifications": [
+      { "id": "fin-cert-1", "name": "CFA Charterholder", "issuer": "CFA Institute", "date": "2019-09" },
+      { "id": "fin-cert-2", "name": "Series 7 & 63", "issuer": "FINRA", "date": "2016-08" }
+    ],
+    "awards": [],
+    "languages": ["English (Native)", "French (Conversational)"],
+    "interests": ["Philanthropy", "Golf", "Wine Collecting"],
+    "references": []
+  },
+  "gen": {
+    "name": "Emma Larsson",
+    "professionalSummary": "Versatile professional with 5+ years of experience in project management, marketing strategy, and business operations. Skilled at bridging the gap between technical teams and stakeholders to deliver impactful results on time and within budget.",
+    "address": "London, UK",
+    "phone": "+44 20 7946 0958",
+    "email": "emma.larsson@promail.co",
+    "website": "https://emmalarsson.com",
+    "socialMedia": [
+      { "platform": "LinkedIn", "url": "https://linkedin.com/in/emmalarsson" },
+      { "platform": "Portfolio", "url": "https://emmalarsson.com/work" }
+    ],
+    "experience": [
+      {
+        "id": "gen-exp-1",
+        "company": "Spotify",
+        "role": "Senior Project Manager",
+        "startDate": "2021-06",
+        "endDate": "Present",
+        "description": "Managing a portfolio of 5 cross-functional projects with combined budgets of €2.4M. Introduced OKR-based tracking that improved team velocity by 28% and stakeholder satisfaction scores by 15 points.",
+        "skills": ["Agile/Scrum", "OKRs", "Stakeholder Management", "Jira"]
+      },
+      {
+        "id": "gen-exp-2",
+        "company": "Unilever",
+        "role": "Marketing Coordinator",
+        "startDate": "2018-09",
+        "endDate": "2021-05",
+        "description": "Coordinated multi-channel campaign launches across 8 European markets. Managed agency relationships and maintained a €1.2M annual media budget with 99% compliance.",
+        "skills": ["Campaign Management", "Budget Control", "Analytics", "Cross-functional Leadership"]
+      }
+    ],
+    "education": [
+      {
+        "id": "gen-edu-1",
+        "institution": "London School of Economics",
+        "degree": "M.Sc. in Management",
+        "startDate": "2016-09",
+        "endDate": "2018-06"
+      },
+      {
+        "id": "gen-edu-2",
+        "institution": "Uppsala University",
+        "degree": "B.A. in Business Administration",
+        "startDate": "2013-09",
+        "endDate": "2016-06"
+      }
+    ],
+    "projects": [
+      {
+        "id": "gen-proj-1",
+        "name": "Brand Refresh Initiative",
+        "description": "Led a cross-departmental brand refresh spanning visual identity, tone of voice, and digital presence across 12 markets. Achieved 35% increase in brand awareness within 6 months.",
+        "skills": ["Brand Strategy", "Project Planning", "Stakeholder Alignment"]
+      },
+      {
+        "id": "gen-proj-2",
+        "name": "Process Automation Program",
+        "description": "Identified and automated 15 manual workflows using Zapier and custom scripts, saving 120+ team hours per month.",
+        "skills": ["Process Improvement", "Automation", "Change Management"]
+      }
+    ],
+    "skills": ["Project Management", "Agile/Scrum", "Stakeholder Management", "Budget Planning", "Marketing Strategy", "Data Analysis", "Jira", "Confluence", "Google Analytics", "Public Speaking"],
+    "skillCategories": [
+      { "id": "gen-sc-1", "name": "Management", "skills": ["Project Management", "Agile/Scrum", "OKRs", "Budget Planning"] },
+      { "id": "gen-sc-2", "name": "Marketing", "skills": ["Campaign Management", "Brand Strategy", "Analytics"] }
+    ],
+    "certifications": [
+      { "id": "gen-cert-1", "name": "PMP (Project Management Professional)", "issuer": "PMI", "date": "2020-11" },
+      { "id": "gen-cert-2", "name": "Google Analytics Certified", "issuer": "Google", "date": "2019-03" }
+    ],
+    "awards": [],
+    "languages": ["English (Fluent)", "Swedish (Native)", "German (Conversational)"],
+    "interests": ["Travel", "Photography", "Sustainable Living"],
+    "references": []
+  }
+}

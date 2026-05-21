@@ -36,7 +36,7 @@ export default function MLTemplate({ data, settings }: TemplateProps) {
     <div style={{ minHeight: "297mm", background: "white", color: settings.fontColor, fontFamily: settings.fontFamily }}>
       {/* Header */}
       <header style={{ padding: pad, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "8px", borderBottom: `2px solid ${settings.primaryColor}` }}>
-        {showImage && <ProfileImage src={data.image!} shape={settings.profilePictureShape} className="w-24 h-24 mb-2" />}
+        {showImage && <ProfileImage src={data.image!} shape={settings.profilePictureShape} showRing={settings.showProfileRing} ringColor={settings.primaryColor} className="w-24 h-24 mb-2" />}
         <h1 style={{ fontSize: "24px", fontWeight: 700, color: settings.primaryColor }}>{data.name}</h1>
         <ContactRow data={data} className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-[10px]" itemClass="flex items-center gap-1 opacity-75" />
       </header>
