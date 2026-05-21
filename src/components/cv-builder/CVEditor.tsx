@@ -28,30 +28,26 @@ export default function CVEditor({ scrollRef, onScroll }: CVEditorProps) {
   return (
     <div className="flex flex-col h-full overflow-hidden">
 
-      {/* ── Standard Underline Tab bar ─────────────── */}
-      <div className="px-3 sm:px-4 pt-4 border-b bg-background/95 backdrop-blur-sm shrink-0 flex gap-6">
-        {TABS.map(({ id, icon: Icon, labelKey }) => (
-          <button
-            key={id}
-            onClick={() => setActive(id)}
-            className={`relative flex items-center gap-2 pb-3 text-[13px] font-medium transition-colors duration-200 select-none ${
-              active === id
-                ? "text-primary"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Icon className="w-[15px] h-[15px] shrink-0" />
-            <span className="hidden min-[360px]:inline truncate">
-              {t[labelKey]}
-            </span>
-            {active === id && (
-              <div
-                className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary rounded-t-full"
-                style={{ boxShadow: "0 -2px 8px var(--primary)" }}
-              />
-            )}
-          </button>
-        ))}
+      {/* ── Sleek Segmented Control Tab Bar ─────────────── */}
+      <div className="px-3 sm:px-4 pt-4 pb-3 border-b bg-background/95 backdrop-blur-sm shrink-0">
+        <div className="flex p-1 bg-muted/60 border border-border/50 rounded-[14px] shadow-inner">
+          {TABS.map(({ id, icon: Icon, labelKey }) => (
+            <button
+              key={id}
+              onClick={() => setActive(id)}
+              className={`relative flex-1 flex items-center justify-center gap-2 py-2 px-3 text-[13px] font-medium transition-all duration-300 rounded-[10px] select-none ${
+                active === id
+                  ? "bg-foreground text-background shadow-md"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+              }`}
+            >
+              <Icon className={`w-[15px] h-[15px] shrink-0 transition-colors duration-300 ${active === id ? "text-background" : "text-muted-foreground"}`} />
+              <span className="hidden min-[360px]:inline truncate">
+                {t[labelKey]}
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* ── Tab content — plain div so we can forward the scroll ref ─────── */}

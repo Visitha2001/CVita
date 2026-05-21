@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface DownloadSuccessModalProps {
   open: boolean;
@@ -21,12 +22,12 @@ export default function DownloadSuccessModal({ open, onClose, format }: Download
     }
   }, [open, onClose]);
 
-  if (!open) return null;
+  if (!open || typeof document === 'undefined') return null;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center"
-      onClick={onClose}
+      className="fixed h-[100dvh] w-full z-[99999] inset-0 flex items-center justify-center"
+      onClick={onClose} 
       style={{
         background: "rgba(0,0,0,0.45)",
         backdropFilter: "blur(6px)",
@@ -95,6 +96,7 @@ export default function DownloadSuccessModal({ open, onClose, format }: Download
           </p>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

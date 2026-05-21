@@ -139,7 +139,7 @@ function TemplatePreview({ templateId, props }: { templateId: string; props: Tem
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function CVTemplatesList() {
-  const { settings, setSettings } = useCVStore();
+  const { cvData, settings, setSettings, setCVData } = useCVStore();
   const [activeCategory, setActiveCategory] = useState<CategoryId>("all");
 
   const filtered = TEMPLATES.filter(
@@ -177,7 +177,11 @@ export default function CVTemplatesList() {
           return (
             <div
               key={tpl.id}
-              onClick={() => setSettings({ activeTemplate: tpl.id })}
+              onClick={() => {
+                setSettings({ activeTemplate: tpl.id });
+                // @ts-ignore - dummyData typing
+                setCVData({ ...dummyData[tpl.cat], image: cvData.image });
+              }}
               className={`cursor-pointer rounded-xl border-2 overflow-hidden transition-all duration-150 group hover:shadow-xl hover:-translate-y-0.5 ${
                 isActive
                   ? "border-primary ring-2 ring-primary/20 shadow-lg"

@@ -41,7 +41,7 @@ export function ProfileImage({
       src={src}
       alt="Profile"
       className={`object-cover flex-shrink-0 ${getProfileShapeClass(shape)} ${className}`}
-      style={showRing ? { border: `3px solid ${ringColor}`, boxSizing: "border-box" } : undefined}
+      style={showRing ? { border: `2px solid ${ringColor}`, padding: "3px", boxSizing: "border-box", background: "transparent" } : undefined}
       onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
     />
   );
