@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import CVEditor from "@/components/cv-builder/CVEditor";
 import CVPreview from "@/components/cv-builder/CVPreview";
 import Navbar from "@/components/cv-builder/Navbar";
@@ -31,6 +31,12 @@ function ChevronIcon({ flipped }: { flipped: boolean }) {
 
 export default function Home() {
   const [mobileTab, setMobileTab] = useState<"preview" | "editor">("editor");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   // Editor scroll tracking for the FAB
   const editorScrollRef = useRef<HTMLDivElement | null>(null);
@@ -49,7 +55,15 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-[100dvh] bg-slate-50 dark:bg-[#09090b] text-foreground overflow-hidden selection:bg-primary/30">
-      <Navbar />
+      <div
+        style={{
+          opacity: mounted ? 1 : 0,
+          transform: mounted ? "translateY(0)" : "translateY(-8px)",
+          transition: "opacity 400ms ease, transform 400ms ease",
+        }}
+      >
+        <Navbar />
+      </div>
 
       {/* ── Main content area ── */}
       <div className="flex flex-1 overflow-hidden flex-row relative">
@@ -62,6 +76,11 @@ export default function Home() {
             md:flex md:flex-col md:w-1/2
             ${mobileTab === "preview" ? "flex flex-col w-full" : "w-0 h-0 opacity-0 pointer-events-none md:flex md:flex-col md:w-1/2 md:h-auto md:opacity-100 md:pointer-events-auto"}
           `}
+          style={{
+            opacity: mounted ? undefined : 0,
+            transform: mounted ? "translateX(0)" : "translateX(-20px)",
+            transition: "opacity 600ms ease 100ms, transform 600ms ease 100ms",
+          }}
         >
           <CVPreview />
         </div>
@@ -75,6 +94,11 @@ export default function Home() {
             md:flex md:flex-col md:w-1/2
             ${mobileTab === "editor" ? "flex flex-col w-full" : "hidden"}
           `}
+          style={{
+            opacity: mounted ? undefined : 0,
+            transform: mounted ? "translateX(0)" : "translateX(20px)",
+            transition: "opacity 600ms ease 200ms, transform 600ms ease 200ms",
+          }}
         >
           <CVEditor scrollRef={editorScrollRef} onScroll={onEditorScroll} />
 

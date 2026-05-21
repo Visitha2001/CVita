@@ -121,7 +121,7 @@ export default function SETemplate({ data, settings }: TemplateProps) {
         {/* sidebar */}
         <div style={{ width: "38%", padding: pad, background: `${settings.primaryColor}08`, borderRight: `1px solid ${settings.primaryColor}20`, display: "flex", flexDirection: "column", gap }}>
           {showImage && data.image && (
-            <ProfileImage src={data.image} shape={settings.profilePictureShape} className="w-24 h-24 mb-2" />
+            <ProfileImage src={data.image} shape={settings.profilePictureShape} showRing={settings.showProfileRing} ringColor={settings.primaryColor} className="w-24 h-24 mb-2" />
           )}
           <div>
             <h1 style={{ fontSize: "20px", fontWeight: 800, color: settings.primaryColor, lineHeight: 1.2 }}>{data.name}</h1>
@@ -154,7 +154,7 @@ export default function SETemplate({ data, settings }: TemplateProps) {
     <div style={{ minHeight: "297mm", background: "white", color: settings.fontColor, fontFamily: settings.fontFamily }}>
       <header style={{ background: headerBg, padding: pad, display: "flex", alignItems: "flex-start", gap: "16px" }}>
         {showImage && data.image && (
-          <ProfileImage src={data.image} shape={settings.profilePictureShape} className="w-24 h-24" />
+          <ProfileImage src={data.image} shape={settings.profilePictureShape} showRing={settings.showProfileRing} ringColor={settings.primaryColor} className="w-24 h-24" />
         )}
         <div style={{ flex: 1 }}>
           <h1 style={{ fontSize: "26px", fontWeight: 800, color: darkHeader ? "white" : settings.primaryColor, lineHeight: 1.2 }}>

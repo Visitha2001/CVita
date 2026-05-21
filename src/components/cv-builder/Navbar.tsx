@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import { Moon, Sun, Download, FileText, Image as ImageIcon, Globe } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ import jsPDF from "jspdf";
 import { useI18n, LANG_OPTIONS } from "@/lib/i18n";
 import { useCVStore } from "@/store/useCVStore";
 import { spacingMap } from "@/components/cv-templates/shared";
+import DownloadSuccessModal from "./DownloadSuccessModal";
 
 // A4 at 96 dpi (must match CVPreview.tsx)
 const A4_W_PX = 794;
@@ -22,6 +24,10 @@ export default function Navbar() {
   const { setTheme, theme } = useTheme();
   const { t, lang, setLang } = useI18n();
   const { settings } = useCVStore();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalFormat, setModalFormat] = useState("");
+  const showSuccess = useCallback((fmt: string) => { setModalFormat(fmt); setModalOpen(true); }, []);
+  const handleCloseModal = useCallback(() => setModalOpen(false), []);
 
   // Use the same outer padding as the CV spacing setting for PDF margins
   const PAGE_MARGIN_MM = parseInt(spacingMap[settings.spacing ?? "standard"].outer);
@@ -78,6 +84,7 @@ export default function Navbar() {
       }
 
       pdf.save("cv.pdf");
+      showSuccess("PDF");
     } catch (err) {
       console.error("Error generating PDF:", err);
     }
@@ -104,6 +111,7 @@ export default function Navbar() {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      showSuccess("PNG");
     } catch (err) {
       console.error("Error generating image:", err);
     }
@@ -159,11 +167,13 @@ export default function Navbar() {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+    showSuccess("DOC");
   };
 
   const currentLang = LANG_OPTIONS.find((l) => l.id === lang);
 
   return (
+    <>
     <nav className="flex items-center justify-between px-3 sm:px-6 py-3 sm:py-4 border-b bg-background/80 backdrop-blur-md sticky top-0 z-50">
       {/* Logo */}
       <div className="flex items-center space-x-2 sm:space-x-3">
@@ -236,5 +246,7 @@ export default function Navbar() {
         </Button>
       </div>
     </nav>
+      <DownloadSuccessModal open={modalOpen} onClose={handleCloseModal} format={modalFormat} />
+    </>
   );
 }

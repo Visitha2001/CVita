@@ -158,6 +158,15 @@ export default function CVSettingsForm() {
             </Card>
           ))}
         </div>
+        <div className="flex items-center justify-between mt-4 pt-4 border-t">
+          <div>
+            <Label className="text-sm font-medium cursor-pointer" onClick={() => setSettings({ showProfileRing: !settings.showProfileRing })}>
+              Ring Border
+            </Label>
+            <p className="text-xs text-muted-foreground mt-0.5">Add an accent-colored ring around your photo</p>
+          </div>
+          <Toggle on={settings.showProfileRing} onToggle={() => setSettings({ showProfileRing: !settings.showProfileRing })} />
+        </div>
       </Section>
 
       {/* CV Spacing */}

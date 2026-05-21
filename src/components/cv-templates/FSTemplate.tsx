@@ -25,7 +25,7 @@ export default function FSTemplate({ data, settings }: TemplateProps) {
     return (
       <div style={{ minHeight: "297mm", background: "white", color: settings.fontColor, fontFamily: settings.fontFamily }}>
         <header style={{ background: settings.primaryColor, color: "white", padding: pad, display: "flex", alignItems: "center", gap: "16px" }}>
-          {showImage && <ProfileImage src={data.image!} shape={settings.profilePictureShape} className="w-20 h-20 border-2 border-white/30" />}
+          {showImage && <ProfileImage src={data.image!} shape={settings.profilePictureShape} showRing={settings.showProfileRing} ringColor={settings.primaryColor} className="w-20 h-20 border-2 border-white/30" />}
           <div>
             <h1 style={{ fontSize: "24px", fontWeight: 800 }}>{data.name}</h1>
             <ContactRow data={data} className="flex flex-wrap gap-x-4 gap-y-1 mt-1" itemClass="flex items-center gap-1 text-[10px] text-white/80" />
@@ -99,7 +99,7 @@ export default function FSTemplate({ data, settings }: TemplateProps) {
     <div style={{ display: "flex", minHeight: "297mm", background: "white", color: settings.fontColor, fontFamily: settings.fontFamily }}>
       {/* Sidebar */}
       <div style={{ width: sidebarWidth, minWidth: sidebarWidth, padding: pad, background: sidebarBg, color: sidebarColor, display: "flex", flexDirection: "column", gap }}>
-        {showImage && <ProfileImage src={data.image!} shape={settings.profilePictureShape} className={`w-24 h-24 ${minimalSidebar ? "" : "border-2 border-white/30"}`} />}
+        {showImage && <ProfileImage src={data.image!} shape={settings.profilePictureShape} showRing={settings.showProfileRing} ringColor={settings.primaryColor} className={`w-24 h-24 ${minimalSidebar ? "" : "border-2 border-white/30"}`} />}
         <div>
           <h1 style={{ fontSize: "18px", fontWeight: 800, lineHeight: 1.2, color: minimalSidebar ? settings.primaryColor : "white" }}>{data.name}</h1>
         </div>

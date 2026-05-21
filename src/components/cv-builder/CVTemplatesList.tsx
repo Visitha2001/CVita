@@ -10,6 +10,7 @@ import MLTemplate from "@/components/cv-templates/MLTemplate";
 import FSTemplate from "@/components/cv-templates/FSTemplate";
 import GenTemplate from "@/components/cv-templates/GenTemplate";
 import FinTemplate from "@/components/cv-templates/FinTemplate";
+import dummyData from "../../../db/dummy-data.json";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -46,8 +47,18 @@ const TEMPLATES = [
   { id: "fin-5", label: "Modern Finance",   cat: "fin" },
   { id: "gen-1", label: "Elegant",          cat: "gen" },
   { id: "gen-2", label: "Elegant + Photo",  cat: "gen" },
-  { id: "gen-3", label: "Split",            cat: "gen" },
-  { id: "gen-4", label: "Split + Photo",    cat: "gen" },
+  { id: "gen-3",  label: "Split",            cat: "gen" },
+  { id: "gen-4",  label: "Split + Photo",    cat: "gen" },
+  { id: "gen-5",  label: "Creative Header",  cat: "gen" },
+  { id: "gen-6",  label: "Compact Modern",   cat: "gen" },
+  { id: "gen-7",  label: "Compact + Photo",  cat: "gen" },
+  { id: "gen-8",  label: "Timeline",         cat: "gen" },
+  { id: "gen-9",  label: "Timeline + Photo", cat: "gen" },
+  { id: "gen-10", label: "Bold Sidebar",     cat: "gen" },
+  { id: "gen-11", label: "Sidebar + Photo",  cat: "gen" },
+  { id: "gen-12", label: "Minimal Clean",    cat: "gen" },
+  { id: "gen-13", label: "Card Layout",      cat: "gen" },
+  { id: "gen-14", label: "Card + Photo",     cat: "gen" },
 ] as const;
 
 const CAT_LABELS: Record<string, string> = {
@@ -128,14 +139,12 @@ function TemplatePreview({ templateId, props }: { templateId: string; props: Tem
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function CVTemplatesList() {
-  const { cvData, settings, setSettings } = useCVStore();
+  const { settings, setSettings } = useCVStore();
   const [activeCategory, setActiveCategory] = useState<CategoryId>("all");
 
   const filtered = TEMPLATES.filter(
     (t) => activeCategory === "all" || t.cat === activeCategory
   );
-
-  const previewProps: TemplateProps = { data: cvData, settings };
 
   return (
     <div className="max-w-2xl mx-auto pt-4 sm:pt-6 pb-10 space-y-5">
@@ -177,7 +186,7 @@ export default function CVTemplatesList() {
             >
               {/* Actual scaled template preview */}
               <div className="overflow-hidden">
-                <TemplatePreview templateId={tpl.id} props={previewProps} />
+                <TemplatePreview templateId={tpl.id} props={{ data: dummyData[tpl.cat as keyof typeof dummyData] as unknown as TemplateProps["data"], settings }} />
               </div>
 
               {/* Label row */}

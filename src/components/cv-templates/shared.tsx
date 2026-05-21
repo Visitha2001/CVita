@@ -26,10 +26,14 @@ export function ProfileImage({
   src,
   shape,
   className = "w-28 h-28",
+  showRing = false,
+  ringColor = "#2563eb",
 }: {
   src: string;
   shape: CVSettings["profilePictureShape"];
   className?: string;
+  showRing?: boolean;
+  ringColor?: string;
 }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
@@ -37,6 +41,7 @@ export function ProfileImage({
       src={src}
       alt="Profile"
       className={`object-cover flex-shrink-0 ${getProfileShapeClass(shape)} ${className}`}
+      style={showRing ? { border: `3px solid ${ringColor}`, boxSizing: "border-box" } : undefined}
       onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
     />
   );
