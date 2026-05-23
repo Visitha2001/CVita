@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, KeyboardEvent } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useCVStore, type CVData, type SkillCategory } from "@/store/useCVStore";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -613,8 +614,17 @@ export default function CVDataForm() {
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-5 pb-5 space-y-4">
+            <AnimatePresence mode="popLayout">
             {cvData.experience.map((exp, idx) => (
-              <div key={exp.id} className="rounded-xl border bg-muted/30 p-4 space-y-3">
+              <motion.div
+                key={exp.id}
+                layout
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                className="rounded-xl border bg-muted/30 p-4 space-y-3"
+              >
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-semibold text-muted-foreground">
                     {exp.role || "New Entry"} {exp.company ? `@ ${exp.company}` : ""}
@@ -655,8 +665,9 @@ export default function CVDataForm() {
                     />
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
+            </AnimatePresence>
             <Button
               variant="outline"
               size="sm"
@@ -677,8 +688,17 @@ export default function CVDataForm() {
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-5 pb-5 space-y-4">
+            <AnimatePresence mode="popLayout">
             {cvData.education.map((edu, idx) => (
-              <div key={edu.id} className="rounded-xl border bg-muted/30 p-4 space-y-3">
+              <motion.div
+                key={edu.id}
+                layout
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                className="rounded-xl border bg-muted/30 p-4 space-y-3"
+              >
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-semibold text-muted-foreground">
                     {edu.degree || "New Entry"} {edu.institution ? `— ${edu.institution}` : ""}
@@ -707,8 +727,9 @@ export default function CVDataForm() {
                     <Input type="month" value={edu.endDate} onChange={(e) => updateItem("education", edu.id, { endDate: e.target.value })} />
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
+            </AnimatePresence>
             <Button
               variant="outline"
               size="sm"
@@ -729,8 +750,17 @@ export default function CVDataForm() {
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-5 pb-5 space-y-4">
+            <AnimatePresence mode="popLayout">
             {cvData.projects.map((proj, idx) => (
-              <div key={proj.id} className="rounded-xl border bg-muted/30 p-4 space-y-3">
+              <motion.div
+                key={proj.id}
+                layout
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                className="rounded-xl border bg-muted/30 p-4 space-y-3"
+              >
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-semibold text-muted-foreground">{proj.name || "New Project"}</span>
                   <div className="flex items-center gap-1">
@@ -761,8 +791,9 @@ export default function CVDataForm() {
                     />
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
+            </AnimatePresence>
             <Button
               variant="outline"
               size="sm"
@@ -800,8 +831,17 @@ export default function CVDataForm() {
             <SectionHeader icon={Award} label={t.certifications} count={cvData.certifications.length} />
           </AccordionTrigger>
           <AccordionContent className="px-5 pb-5 space-y-4">
+            <AnimatePresence mode="popLayout">
             {cvData.certifications.map((cert, idx) => (
-              <div key={cert.id} className="rounded-xl border bg-muted/30 p-4 space-y-3">
+              <motion.div
+                key={cert.id}
+                layout
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                className="rounded-xl border bg-muted/30 p-4 space-y-3"
+              >
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-semibold text-muted-foreground">{cert.name || "New Certification"}</span>
                   <div className="flex items-center gap-1">
@@ -824,8 +864,9 @@ export default function CVDataForm() {
                     <Input type="month" value={cert.date} onChange={(e) => useCVStore.getState().updateArrayItem("certifications", cert.id, { date: e.target.value })} />
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
+            </AnimatePresence>
             <Button variant="outline" size="sm" className="gap-2" onClick={() => addItem("certifications" as unknown as ArrayKey, { name: "", issuer: "", date: "" })}>
               <Plus className="w-4 h-4" /> Add Certification
             </Button>
@@ -856,8 +897,17 @@ export default function CVDataForm() {
             <p className="text-xs text-muted-foreground bg-muted/40 rounded-lg px-3 py-2">
               References are hidden by default. Enable them in the <strong>Settings</strong> tab under &ldquo;Section Visibility&rdquo;.
             </p>
+            <AnimatePresence mode="popLayout">
             {cvData.references.map((ref, idx) => (
-              <div key={ref.id} className="rounded-xl border bg-muted/30 p-4 space-y-3">
+              <motion.div
+                key={ref.id}
+                layout
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                className="rounded-xl border bg-muted/30 p-4 space-y-3"
+              >
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-semibold text-muted-foreground">{ref.name || "New Reference"}</span>
                   <div className="flex items-center gap-1">
@@ -888,8 +938,9 @@ export default function CVDataForm() {
                     <Input value={ref.phone} onChange={(e) => useCVStore.getState().updateArrayItem("references", ref.id, { phone: e.target.value })} />
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
+            </AnimatePresence>
             <Button variant="outline" size="sm" className="gap-2" onClick={() => addItem("references" as unknown as ArrayKey, { name: "", position: "", company: "", email: "", phone: "" })}>
               <Plus className="w-4 h-4" /> Add Reference
             </Button>
