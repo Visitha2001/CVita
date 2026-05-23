@@ -4,6 +4,7 @@ import { useRef, useState, useCallback, useEffect } from "react";
 import CVEditor from "@/components/cv-builder/CVEditor";
 import CVPreview from "@/components/cv-builder/CVPreview";
 import Navbar from "@/components/cv-builder/Navbar";
+import WelcomePopup from "@/components/cv-builder/WelcomePopup";
 import { Eye, Pencil } from "lucide-react";
 
 // Chevron SVG used in the scroll FAB
@@ -182,6 +183,7 @@ export default function Home() {
         </div>
 
       </div>
+      <WelcomePopup />
     </div>
   );
 }

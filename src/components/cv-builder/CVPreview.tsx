@@ -36,7 +36,9 @@ export default function CVPreview() {
   const hiddenRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const [scale, setScale]         = useState(1);
+  const [baseScale, setBaseScale] = useState(1);
+  const [userZoom, setUserZoom]   = useState(1);
+  const scale = baseScale * userZoom;
   const [pageCount, setPageCount] = useState(1);
   const [mounted, setMounted]     = useState(false);
 
@@ -64,10 +66,27 @@ export default function CVPreview() {
     if (!el) return;
     const ro = new ResizeObserver(() => {
       const containerW = el.clientWidth;
-      if (containerW > 0) setScale(Math.min(1, containerW / A4_W_PX));
+      if (containerW > 0) setBaseScale(Math.min(1, containerW / A4_W_PX));
     });
     ro.observe(el);
     return () => ro.disconnect();
+  }, []);
+
+  // Zoom on Ctrl + Scroll
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const handleWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        setUserZoom((prev) => {
+          const zoomDelta = e.deltaY > 0 ? -0.1 : 0.1;
+          return Math.max(0.5, Math.min(prev + zoomDelta, 3));
+        });
+      }
+    };
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
   }, []);
 
   // Recalculate page count from hidden element's scrollHeight

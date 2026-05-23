@@ -6,6 +6,7 @@ import CVTemplatesList from "./CVTemplatesList";
 import { FileText, Settings, LayoutTemplate } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 type Tab = "data" | "settings" | "templates";
 
@@ -56,9 +57,20 @@ export default function CVEditor({ scrollRef, onScroll }: CVEditorProps) {
         onScroll={onScroll}
         className="flex-1 overflow-auto px-3 sm:px-4"
       >
-        {active === "data"      && <CVDataForm />}
-        {active === "settings"  && <CVSettingsForm />}
-        {active === "templates" && <CVTemplatesList />}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={active}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="h-full"
+          >
+            {active === "data"      && <CVDataForm />}
+            {active === "settings"  && <CVSettingsForm />}
+            {active === "templates" && <CVTemplatesList />}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
     </div>
